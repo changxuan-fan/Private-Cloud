@@ -1,14 +1,14 @@
-//package com.ehz.securingweb;
+// package com.ehz.securingweb;
 //
-//import com.ehz.service.*;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.context.SpringBootTest;
+// import com.ehz.service.*;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.boot.test.context.SpringBootTest;
 //
-//import java.io.IOException;
+// import java.io.IOException;
 //
-//@SpringBootTest
-//public class DaoTests {
+// @SpringBootTest
+// public class DaoTests {
 //    @Autowired
 //    private FileService fileService;
 //
@@ -37,7 +37,7 @@
 //        userService.createUser("kevin", "{noop}140", "ADMIN");
 //
 //
-//        userService.createUser("jack", "{noop}140", "USER");
+//        userService.createUser("jack", "140", "USER");
 //
 //
 ////        fileService.createFile("root", "school");
@@ -64,4 +64,4 @@
 ////        fileService.deleteFile(uuid);
 //    }
 //
-//}
+// }

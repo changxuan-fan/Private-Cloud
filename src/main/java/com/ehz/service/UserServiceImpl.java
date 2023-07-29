@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final UserFileMappingRepository userFileMappingRepository;
-
   private final RoleRepository roleRepository;
-
   private final FileRepository fileRepository;
   private final PermissionRepository permissionRepository;
 

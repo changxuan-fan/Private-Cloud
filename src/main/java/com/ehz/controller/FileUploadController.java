@@ -3,6 +3,7 @@ package com.ehz.controller;
 import com.ehz.domain.File;
 import com.ehz.domain.SubFile;
 import com.ehz.domain.User;
+import com.ehz.domain.UserFileMapping;
 import com.ehz.service.FileService;
 import com.ehz.service.SubFileService;
 import com.ehz.service.UserFileMappingService;
@@ -10,10 +11,7 @@ import com.ehz.service.UserService;
 import com.ehz.storage.StorageFileNotFoundException;
 import com.ehz.storage.StorageProperties;
 import com.ehz.storage.StorageService;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,11 +20,10 @@ import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 import org.jodconverter.core.DocumentConverter;
-import org.jodconverter.core.document.DefaultDocumentFormatRegistry;
 import org.jodconverter.core.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,6 +51,7 @@ public class FileUploadController {
       UserFileMappingService userFileMappingService,
       StorageProperties storageProperties,
       DocumentConverter documentConverter) {
+
     this.storageService = storageService;
     this.fileService = fileService;
     this.userService = userService;
@@ -61,6 +59,10 @@ public class FileUploadController {
     this.userFileMappingService = userFileMappingService;
     this.rootLocation = storageProperties.getRootLocation();
     this.documentConverter = documentConverter;
+  }
+
+  public String appendTempAndPdf(String filename) {
+    return ".temp_display_" + filename + ".pdf";
   }
 
   @GetMapping("/ehz/files")
@@ -101,11 +103,15 @@ public class FileUploadController {
       //            if (permission.equals("Display")) {
       // get file's byte array
       byte[] fileBytes = getFileBytes(subFilePath);
-      String encodedFile =
-          Base64.getEncoder().encodeToString(fileBytes); // transform bytes to base64 string
-      model.addAttribute("encodedFile", encodedFile);
+      if (fileBytes != null) {
+        String encodedFile =
+            Base64.getEncoder().encodeToString(fileBytes); // transform bytes to base64 string
+        model.addAttribute("encodedFile", encodedFile);
+        return "preview";
 
-      return "preview";
+      } else {
+        throw new AccessDeniedException("File type is not available to open");
+      }
       //            }
 
       //            else {
@@ -123,35 +129,31 @@ public class FileUploadController {
   }
 
   // Get byte array of a file
-  private byte[] getFileBytes(String subFilePath) throws IOException, OfficeException {
+  private byte[] getFileBytes(String subFilePath) throws IOException {
+
     Path path = storageService.load(subFilePath);
+    String fileName = appendTempAndPdf(path.getFileName().toString());
+    Path tempPdfPath = path.getParent().resolve(fileName);
 
     if (subFilePath.endsWith(".pdf")) {
       return Files.readAllBytes(path);
-    } else {
-      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-      // Convert
-      documentConverter
-          .convert(path.toFile())
-          .to(outputStream)
-          .as(DefaultDocumentFormatRegistry.PDF)
-          .execute();
-
-      // Converting the outputStream into a byte array
-      return outputStream.toByteArray();
     }
+
+    if (Files.exists(tempPdfPath)) {
+      return Files.readAllBytes(tempPdfPath);
+    }
+
+    return null;
   }
 
   // Get current user's permission level of the input url
   public String getAccessPermission(Principal principal, SubFile subFile) {
     User currentUser = userService.findByUsername(principal.getName());
     File currentFile = subFile.getFile();
+    UserFileMapping userFileMapping =
+        userFileMappingService.findByUserAndFile(currentUser, currentFile);
 
-    return userFileMappingService
-        .findByUserAndFile(currentUser, currentFile)
-        .getPermission()
-        .getPermissionName();
+    return userFileMapping.getPermission().getPermissionName();
   }
 
   // Instead of passing the whole File objects, it creates and uses a Map
@@ -162,19 +164,24 @@ public class FileUploadController {
     Map<String, Map<String, String>> fileMap = new HashMap<>();
 
     for (Path path : paths) {
-      String subFilePath = path.toString().replace('\\', '/'); // If the system is Windows
-      SubFile subFile = subFileService.findBySubFilePath(subFilePath);
+      String fileName = path.getFileName().toString();
 
+      if (fileName.startsWith(".temp_")) {
+        continue; // Skip files starting with ".temp_"
+      }
+
+      String subFilePath = path.toString().replace('\\', '/');
+      SubFile subFile = subFileService.findBySubFilePath(subFilePath);
       String permission = getAccessPermission(principal, subFile);
+
       if (!permission.equals("None")) {
         Map<String, String> fileAttributes = new HashMap<>();
-
         fileAttributes.put("filePath", subFilePath);
         fileAttributes.put("uuid", subFile.getSubFileId().toString());
-
-        fileMap.put(path.getFileName().toString(), fileAttributes);
+        fileMap.put(fileName, fileAttributes);
       }
     }
+
     return fileMap;
   }
 
@@ -200,12 +207,12 @@ public class FileUploadController {
 
     // Add URLEncoder.encode() and  StandardCharsets.UTF_8 to solve unreadable characters
     return ResponseEntity.ok()
-        .header(
-            HttpHeaders.CONTENT_DISPOSITION,
-            "attachment; filename=\"" + URLEncoder.encode(filename, StandardCharsets.UTF_8) + "\"")
+        .header("Content-Disposition", "download; filename=\"" + filename + "\"")
+        .contentType(MediaType.parseMediaType("application/pdf"))
         .body(file);
   }
 
+  // the file created is a **Directory**
   @PostMapping("/ehz/files/{uuidString}/create")
   public String fileCreate(
       @PathVariable String uuidString,
@@ -215,22 +222,20 @@ public class FileUploadController {
       throws IOException {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
-    // Get user's permission for the uuidString
     String permission = getAccessPermission(principal, subFile);
-    // permission cannot be None
     if (!permission.equals("Download") && !permission.equals("Modify")) {
       throw new AccessDeniedException("Access Denied: User doesn't have the permission to create");
     }
 
     String subFilePath = subFile.getSubFilePath();
-    String filePath = subFilePath + "/" + filename;
+    String filePath = Paths.get(subFilePath, filename).toString();
 
-    // Create the file in the OS
+    // Create the file in the system
     storageService.create(filePath);
 
-    // Create the file in the database according to whether it is root files
+    // Create the file in the database
     if (subFilePath.equals(rootLocation)
-        || Objects.equals(Paths.get(subFilePath).getParent().toString(), rootLocation)) {
+        || Paths.get(subFilePath).getParent().toString().equals(rootLocation)) {
       fileService.createFile(subFilePath, filename);
     } else {
       subFileService.createSubFile(subFilePath, filename, true);
@@ -281,8 +286,10 @@ public class FileUploadController {
     }
 
     String subFilePath = subFile.getSubFilePath();
-    if (subFilePath.equals(rootLocation)
-        || subFilePath.substring(0, subFilePath.lastIndexOf('/')).equals(rootLocation)) {
+    String parentPath = Paths.get(subFilePath).getParent().toString();
+
+    // The first two layers of root can only contain directories
+    if (subFilePath.equals(rootLocation) || Objects.equals(parentPath, rootLocation)) {
       throw new IllegalArgumentException("Cannot upload files in the root directories");
     }
 
@@ -290,8 +297,6 @@ public class FileUploadController {
 
     // Insert files to the database
     for (MultipartFile file : files) {
-      System.out.println(
-          "File Name: " + file.getOriginalFilename() + "  file type: " + file.getContentType());
       subFileService.createSubFile(subFilePath, file.getOriginalFilename(), false);
     }
 

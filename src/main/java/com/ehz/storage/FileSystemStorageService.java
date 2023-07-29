@@ -8,9 +8,10 @@ import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Stream;
+import org.jodconverter.core.DocumentConverter;
+import org.jodconverter.core.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -21,46 +22,99 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileSystemStorageService implements StorageService {
 
+  private static final Map<String, String> Allowed_DOCUMENT_TYPES_To_PDF = new HashMap<>();
+
+  static {
+    Allowed_DOCUMENT_TYPES_To_PDF.put("doc", "application/msword");
+    Allowed_DOCUMENT_TYPES_To_PDF.put(
+        "docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+    Allowed_DOCUMENT_TYPES_To_PDF.put("ppt", "application/vnd.ms-powerpoint");
+    Allowed_DOCUMENT_TYPES_To_PDF.put(
+        "pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+    Allowed_DOCUMENT_TYPES_To_PDF.put("xls", "application/vnd.ms-excel");
+    Allowed_DOCUMENT_TYPES_To_PDF.put(
+        "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+    Allowed_DOCUMENT_TYPES_To_PDF.put("txt", "text/plain");
+    Allowed_DOCUMENT_TYPES_To_PDF.put("html", "text/html");
+    Allowed_DOCUMENT_TYPES_To_PDF.put("csv", "text/csv");
+  }
+
   private final String rootLocation;
+  private final DocumentConverter documentConverter;
 
   @Autowired
-  public FileSystemStorageService(StorageProperties properties) {
+  public FileSystemStorageService(
+      StorageProperties properties, DocumentConverter documentConverter) {
     this.rootLocation = properties.getRootLocation();
+    this.documentConverter = documentConverter;
+  }
+
+  public static Map<String, String> getAllowed_DOCUMENT_TYPES_To_PDF() {
+    return Collections.unmodifiableMap(Allowed_DOCUMENT_TYPES_To_PDF);
+  }
+
+  public String appendTempAndPdf(String filename) {
+    return ".temp_display_" + filename + ".pdf";
   }
 
   @Override
   public void store(MultipartFile[] files, String filePath) {
-
     try {
       Path directoryPath = Paths.get(filePath);
-      System.out.println(directoryPath);
-      // Collect all the file names to check for conflicts
       Set<String> existingFilenames = new HashSet<>();
+
+      // Collect all the file names to check for conflicts
       for (MultipartFile file : files) {
         String filename = file.getOriginalFilename();
         assert filename != null;
         Path filePathInDirectory = directoryPath.resolve(filename);
 
-        System.out.println(filePathInDirectory);
+        // Convert the file to pdf form, with name appended with .temp_display_
+        String tempFilename = appendTempAndPdf(filename);
+        Path temFilePathInDirectory = directoryPath.resolve(tempFilename);
+
         if (existingFilenames.contains(filename) || Files.exists(filePathInDirectory)) {
           throw new IllegalArgumentException("File with the same name already exists: " + filename);
         }
 
+        if (existingFilenames.contains(tempFilename) || Files.exists(temFilePathInDirectory)) {
+          throw new IllegalArgumentException(
+              "Temp File with the same name already exists: " + filename);
+        }
+
         existingFilenames.add(filename);
+        existingFilenames.add(tempFilename);
       }
 
       // If no conflicts, copy the files
       for (MultipartFile file : files) {
         String filename = file.getOriginalFilename();
-        assert filename != null;
-        Path filePathInDirectory = directoryPath.resolve(filename);
+        String contentType = file.getContentType();
 
-        try (InputStream inputStream = file.getInputStream()) {
-          Files.copy(inputStream, filePathInDirectory);
+        if (filename != null && contentType != null) {
+          Path filePathInDirectory = directoryPath.resolve(filename);
+          String tempFilename = appendTempAndPdf(filename);
+
+          Path tempFilePathInDirectory = directoryPath.resolve(tempFilename);
+
+          try (InputStream inputStream = file.getInputStream()) {
+            Files.copy(inputStream, filePathInDirectory);
+          }
+
+          // Create temp file
+          if (getAllowed_DOCUMENT_TYPES_To_PDF().containsValue(contentType)) {
+            try (InputStream inputStream = file.getInputStream()) {
+              File tempFile = tempFilePathInDirectory.toFile();
+              documentConverter.convert(inputStream).to(tempFile).execute();
+              tempFile.createNewFile();
+            }
+          }
         }
       }
     } catch (IOException e) {
       throw new StorageException("Failed to store files.", e);
+    } catch (OfficeException e) {
+      throw new RuntimeException(e);
     }
   }
 
@@ -100,7 +154,17 @@ public class FileSystemStorageService implements StorageService {
 
   @Override
   public void delete(String filePath) {
-    FileSystemUtils.deleteRecursively(Paths.get(filePath).toFile());
+    Path path = Paths.get(filePath);
+    Path directoryPath = path.getParent();
+    String tempFilename = appendTempAndPdf(String.valueOf(path.getFileName()));
+    Path tempFilePathInDirectory = directoryPath.resolve(tempFilename);
+
+    FileSystemUtils.deleteRecursively(path.toFile());
+
+    // If temp file exists, delete it
+    if (Files.isRegularFile(tempFilePathInDirectory)) {
+      FileSystemUtils.deleteRecursively(tempFilePathInDirectory.toFile());
+    }
   }
 
   @Override
