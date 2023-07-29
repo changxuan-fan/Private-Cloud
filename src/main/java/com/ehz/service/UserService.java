@@ -3,7 +3,7 @@ package com.ehz.service;
 import com.ehz.domain.User;
 
 public interface UserService {
-  void createUser(String username, String password, String roleName);
+  void createUser(String username, String password, String realName, String roleName);
 
   void deleteUser(String username);
 

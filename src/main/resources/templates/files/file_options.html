@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <title></title>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+        <link href="/files/file_options.css" media="all" rel="stylesheet"
+              type="text/css"/>
+        <link href="/buttons.css" media="all" rel="stylesheet"
+              type="text/css"/>
+    </head>
+
+    <body>
+
+        <div class="file-options">
+
+            <!-- Description Button-->
+            <div class="div-description" id="div-description" style="display: none;">
+                <form action="#" id="form-description" class="form-description" method="post">
+                    <label class="label-description" for="input-description"><b>Description</b></label>
+
+                    <textarea class="input-description" id="input-description" rows="20" cols="80"
+                              name="input-description"
+                              form="form-description"></textarea>
+
+                    <label>
+                        <input class="input-description-hidden" name="uuidOriginal" value="#" style="display: none;">
+                    </label>
+
+                    <div style="text-align: center;">
+                        <button type="button" class="cancel-button"
+                                onclick="document.getElementById('div-description').style.display='none'">Cancel
+                        </button>
+                        <button type="submit" class="submit-button">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Download Button-->
+            <div class="div-download" id="div-download" style="display: none;">
+                <form action="#" class="form-download" th:method="GET">
+                    <input type="submit" value="Download">
+                </form>
+            </div>
+
+
+            <!-- Delete Button-->
+            <div class="div-delete" id="div-delete" style="display: none;">
+                <form action="#" class="form-delete" th:method="GET">
+                    <label class="label-delete">Delete Permanently?</label>
+                    <label>
+                        <input class="input-delete-hidden" name="uuidOriginal" value="#" style="display: none;">
+                    </label>
+                    <div style="text-align: center;">
+                        <button type="button" class="cancel-button"
+                                onclick="document.getElementById('div-delete').style.display='none'">Cancel
+                        </button>
+                        <button type="submit" class="submit-button">Delete</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

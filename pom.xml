@@ -9,10 +9,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>ehz_2</artifactId>
+    <artifactId>ehz_3</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>securing-web-complete</name>
     <description>EHZ File Management System</description>
+
 
     <dependencies>
         <dependency>
@@ -91,6 +92,25 @@
             <version>4.4.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+
     </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -1,17 +1,30 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-      xmlns:th="https://www.thymeleaf.org">
+
+<html xmlns:th="http://www.thymeleaf.org">
+
     <head>
-        <title>Hello World!</title>
+        <title></title>
+        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+        <!--        <link rel="stylesheet" type="text/css" media="all"-->
+        <!--              href="" th:href=""/>-->
+        <style>
+            body {
+                margin: 0;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        </style>
     </head>
+
     <body>
-        <h1 th:inline="text">Hello <span sec:authentication="name" th:remove="tag">thymeleaf</span>!</h1>
 
-        <!--include uploadForm.html-->
-        <div th:replace="~{uploadForm}"></div>
+        <!-- Include the navigation fragment -->
+        <div th:replace="~{fragments/navbar}"></div>
 
-        <form method="post" th:action="@{/logout}">
-            <input type="submit" value="Sign Out"/>
-        </form>
+        <!-- Include the sidebar fragment -->
+        <div th:replace="~{/fragments/sidebar}"></div>
+
+        <!-- Include the main content fragment -->
+        <div th:replace="~{/files/file_main}"></div>
     </body>
+
 </html>

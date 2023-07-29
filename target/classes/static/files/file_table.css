@@ -1,0 +1,122 @@
+/*
+Table Styles
+*/
+.file-table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* Table cells and headers */
+.file-table td,
+.file-table th {
+    padding: 10px 0;
+    text-align: left;
+    border: none; /* Remove unnecessary borders to create a cleaner table */
+    border-bottom: 1px solid #ddd; /* Add border bottom instead of using border-bottom-style */
+}
+
+/* Add some spacing to the first column of the table */
+.file-table td:first-child {
+    padding-left: 16px;
+}
+
+
+/* Table header buttons for sorting */
+.file-table th button {
+    background-color: white;
+    border: none;
+    display: block;
+    font: inherit;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+}
+
+.file-table th button:not(#Options) {
+    cursor: pointer;
+}
+
+#Options {
+    font-size: 0;
+    color: transparent;
+}
+
+.file-table th button::after {
+    padding: 12px;
+}
+
+.file-table th button[data-dir="asc"]::after {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpolygon points='0, 0 8,0 4,8 8' fill='%23818688'/%3E%3C/svg%3E");
+}
+
+.file-table th button[data-dir="desc"]::after {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpolygon points='4 0,8 8,0 8' fill='%23818688'/%3E%3C/svg%3E");
+}
+
+/*
+Table Body Styles
+*/
+
+/* Add a custom class to rows that will be focused */
+.table-content tr.focus {
+    background-color: #c2e7ff;
+}
+
+/* Apply background color on hover for all tr elements except the header and those with the class "focus" */
+.table-content tr:not(.focus):hover {
+    background-color: #f2f2f2;
+}
+
+/* Links inside table cells */
+.table-content td a {
+    text-decoration: none;
+    color: black;
+    cursor: default;
+    pointer-events: none; /* Disable pointer events, so the link is not clickable by default */
+}
+
+
+/*
+File Type SVG
+*/
+
+/* To ensure vertical-align is middle */
+.folder-file {
+    display: flex;
+}
+
+.folder-file .svg-file {
+    padding-right: 10px;
+    min-width: 18px;
+    min-height: 18px;
+}
+
+
+/*
+File Options
+*/
+
+
+.file-options {
+    display: flex;
+}
+
+.file-options .button-options {
+    background-color: white;
+    padding: 5px 7px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.file-options .button-options:hover {
+    opacity: 0.8;
+}
+
+.file-options .svg-options {
+    min-height: 18px;
+    width: 18px;
+}

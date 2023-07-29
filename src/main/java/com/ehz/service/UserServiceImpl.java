@@ -2,6 +2,7 @@ package com.ehz.service;
 
 import com.ehz.domain.*;
 import com.ehz.repository.*;
+import com.ehz.storage.StorageProperties;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
   private final RoleRepository roleRepository;
   private final FileRepository fileRepository;
   private final PermissionRepository permissionRepository;
+  private final String rootLocation;
 
   @Autowired
   public UserServiceImpl(
@@ -23,16 +25,18 @@ public class UserServiceImpl implements UserService {
       UserFileMappingRepository userFileMappingRepository,
       RoleRepository roleRepository,
       FileRepository fileRepository,
-      PermissionRepository permissionRepository) {
+      PermissionRepository permissionRepository,
+      StorageProperties storageProperties) {
     this.userRepository = userRepository;
     this.userFileMappingRepository = userFileMappingRepository;
     this.roleRepository = roleRepository;
     this.fileRepository = fileRepository;
     this.permissionRepository = permissionRepository;
+    this.rootLocation = storageProperties.getRootLocation();
   }
 
   @Transactional
-  public void createUser(String username, String password, String roleName) {
+  public void createUser(String username, String password, String realName, String roleName) {
     // Retrieve the role from the role repository
     Role role =
         roleRepository
@@ -42,6 +46,7 @@ public class UserServiceImpl implements UserService {
     // Create and save the user object
     User user = new User();
     user.setUsername(username);
+    user.setRealName(realName);
     user.setPassword(password);
     user.setRole(role);
     User savedUser = userRepository.save(user);
@@ -56,6 +61,16 @@ public class UserServiceImpl implements UserService {
         permissionRepository
             .findByPermissionName("Modify")
             .orElseThrow(() -> new EntityNotFoundException("Permission Modify not present"));
+    Permission permissionDisplay =
+        permissionRepository
+            .findByPermissionName("Display")
+            .orElseThrow(() -> new EntityNotFoundException("Permission Display not present"));
+
+    // Get Root
+    File root =
+        fileRepository
+            .findByFilePath(this.rootLocation)
+            .orElseThrow(() -> new EntityNotFoundException("Root not exists"));
 
     // Create and save the userFileMapping objects
     List<File> files = fileRepository.findAll();
@@ -70,8 +85,17 @@ public class UserServiceImpl implements UserService {
     } else if (roleName.equals("USER")) {
       userFileMappings =
           files.stream()
-              .map(file -> new UserFileMapping(savedUser, file, permissionNone))
+              .map(
+                  file -> {
+                    if (file.getFilePath()
+                        .equals(this.rootLocation)) { // Set Root's permission as Display
+                      return new UserFileMapping(savedUser, file, permissionDisplay);
+                    } else {
+                      return new UserFileMapping(savedUser, file, permissionNone);
+                    }
+                  })
               .collect(Collectors.toList());
+
     } else {
       throw new IllegalArgumentException("Invalid roleName: " + roleName);
     }

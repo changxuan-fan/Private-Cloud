@@ -11,7 +11,12 @@ import com.ehz.service.UserService;
 import com.ehz.storage.StorageFileNotFoundException;
 import com.ehz.storage.StorageProperties;
 import com.ehz.storage.StorageService;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,11 +24,13 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipOutputStream;
+import org.apache.commons.io.FileUtils;
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,20 +68,15 @@ public class FileUploadController {
     this.documentConverter = documentConverter;
   }
 
-  public String appendTempAndPdf(String filename) {
-    return ".temp_display_" + filename + ".pdf";
-  }
-
-  @GetMapping("/ehz/files")
-  public String listUploadedFiles() {
+  @GetMapping({"/", "/ehz/files"})
+  public String fileListHome() {
     String uuidString = subFileService.findBySubFilePath(rootLocation).getSubFileId().toString();
 
     return "redirect:/ehz/files/" + uuidString;
   }
 
   @GetMapping("/ehz/files/{uuidString}")
-  public String listOrDisplayUploadedFiles(
-      @PathVariable String uuidString, Model model, Principal principal)
+  public String fileListOrDisplay(@PathVariable String uuidString, Model model, Principal principal)
       throws IOException, OfficeException {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
@@ -91,11 +93,11 @@ public class FileUploadController {
     if (subFile.getIsDirectory()) { // If uuidString refers to a directory, then enter the directory
       List<Path> paths = storageService.loadAll(subFilePath).collect(Collectors.toList());
 
-      // Create fileMap that contains file attributes
-      Map<String, Map<String, String>> fileMap = createFileMap(paths, principal);
-      model.addAttribute("fileMap", fileMap);
+      // Create fileList that contains file attributes
+      List<Map<String, String>> fileList = createFileList(paths, principal);
+      model.addAttribute("fileList", fileList);
       model.addAttribute("uuidString", uuidString);
-
+      model.addAttribute("permission", permission);
       return "files";
 
     } else { // If uuidString refers to a file, then display the pdf form
@@ -112,19 +114,6 @@ public class FileUploadController {
       } else {
         throw new AccessDeniedException("File type is not available to open");
       }
-      //            }
-
-      //            else {
-      //                Resource file = storageService.loadAsResource(subFilePath);
-      //                String filename = file.getFilename();
-      //                assert filename != null;
-      //                // Add URLEncoder.encode() and  StandardCharsets.UTF_8 to solve unreadable
-      // characters
-      //                return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-      //                        "inline; filename=\"" + URLEncoder.encode(filename,
-      // StandardCharsets.UTF_8) + "\"").body(file);
-      //            }
-
     }
   }
 
@@ -132,8 +121,10 @@ public class FileUploadController {
   private byte[] getFileBytes(String subFilePath) throws IOException {
 
     Path path = storageService.load(subFilePath);
-    String fileName = appendTempAndPdf(path.getFileName().toString());
-    Path tempPdfPath = path.getParent().resolve(fileName);
+    String fileName = path.getFileName().toString();
+    String tempPdfName = ".temp_display_" + fileName + ".pdf";
+
+    Path tempPdfPath = path.getParent().resolve(tempPdfName);
 
     if (subFilePath.endsWith(".pdf")) {
       return Files.readAllBytes(path);
@@ -160,35 +151,71 @@ public class FileUploadController {
   // The Map includes file attributes.
   // It filters out files without permission
   // Key: filename;  Value: filePath, fileUUID, 'fileIsDirectory'
-  private Map<String, Map<String, String>> createFileMap(List<Path> paths, Principal principal) {
-    Map<String, Map<String, String>> fileMap = new HashMap<>();
+  private List<Map<String, String>> createFileList(List<Path> paths, Principal principal)
+      throws IOException {
+    List<Map<String, String>> fileList = new ArrayList<>();
 
     for (Path path : paths) {
-      String fileName = path.getFileName().toString();
+      String filename = path.getFileName().toString();
 
-      if (fileName.startsWith(".temp_")) {
-        continue; // Skip files starting with ".temp_"
+      // Skip files starting with ".temp_"
+      if (filename.startsWith(".temp_")) {
+        continue;
       }
 
       String subFilePath = path.toString().replace('\\', '/');
-      SubFile subFile = subFileService.findBySubFilePath(subFilePath);
-      String permission = getAccessPermission(principal, subFile);
 
-      if (!permission.equals("None")) {
-        Map<String, String> fileAttributes = new HashMap<>();
-        fileAttributes.put("filePath", subFilePath);
-        fileAttributes.put("uuid", subFile.getSubFileId().toString());
-        fileMap.put(fileName, fileAttributes);
+      try {
+        // Check if the file exists in the database
+        SubFile subFile = subFileService.findBySubFilePath(subFilePath);
+
+      } catch (EntityNotFoundException e) {
+        // If the file doesn't exist, create it in the database
+        Path modifiedPath = Paths.get(subFilePath);
+        Path parentPath = modifiedPath.getParent();
+        Path grandParentPath = parentPath != null ? parentPath.getParent() : null;
+
+        if (parentPath != null && parentPath.toString().equals(rootLocation)) {
+          fileService.createFile(parentPath.toString(), filename, null);
+        } else if (grandParentPath != null && grandParentPath.toString().equals(rootLocation)) {
+          fileService.createFile(parentPath.toString(), filename, null);
+        } else {
+          subFileService.createSubFile(
+              parentPath.toString(), filename, "Other", " — ", Files.isDirectory(path), null);
+        }
+
+      } finally {
+        // Fetch the file from the database and check the permission
+        SubFile subFile = subFileService.findBySubFilePath(subFilePath);
+        String permission = getAccessPermission(principal, subFile);
+        User uploadUser = subFile.getUploadUser();
+        String uploadUserRealName = (uploadUser != null) ? uploadUser.getRealName() : "";
+
+        if (!"None".equals(permission)) {
+          // Add file attributes to the fileList
+          Map<String, String> fileAttributes = new HashMap<>();
+          fileAttributes.put("filename", filename);
+          fileAttributes.put("filePath", subFilePath);
+          fileAttributes.put("uuid", subFile.getSubFileId().toString());
+          fileAttributes.put("isDirectory", String.valueOf(subFile.getIsDirectory()));
+          fileAttributes.put("uploadDate", subFile.getUploadDate());
+          fileAttributes.put("uploadUser", uploadUserRealName);
+          fileAttributes.put("fileSize", subFile.getFileSize());
+          fileAttributes.put("fileType", subFile.getFileType());
+          fileAttributes.put("permission", permission);
+          fileAttributes.put("description", subFile.getDescription()); // Could be null
+          fileList.add(fileAttributes);
+        }
       }
     }
 
-    return fileMap;
+    return fileList;
   }
 
   @GetMapping("/ehz/files/{uuidString}/download")
   @ResponseBody
-  public ResponseEntity<Resource> fileDownload(@PathVariable String uuidString, Principal principal)
-      throws AccessDeniedException {
+  public ResponseEntity<byte[]> fileDownload(@PathVariable String uuidString, Principal principal)
+      throws IOException {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
     // Get user's permission for the uuidString
@@ -199,17 +226,37 @@ public class FileUploadController {
       throw new AccessDeniedException(
           "Access Denied: User doesn't have the permission to download");
     }
-
     String subFilePath = subFile.getSubFilePath();
-    Resource file = storageService.loadAsResource(subFilePath);
-    String filename = file.getFilename();
-    assert filename != null;
+    String filename;
+    byte[] fileByteArray;
 
-    // Add URLEncoder.encode() and  StandardCharsets.UTF_8 to solve unreadable characters
+    if (subFile.getIsDirectory()) {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      ZipOutputStream zipOut = new ZipOutputStream(baos);
+
+      java.io.File file = storageService.loadAsFile(subFilePath);
+
+      // Zip the directory
+      storageService.zipFile(file, file.getName(), zipOut);
+      filename = file.getName() + ".zip";
+
+      // Close Stream first, Be careful of the order
+      zipOut.close();
+      baos.close();
+      fileByteArray = baos.toByteArray();
+
+    } else {
+      Resource file = storageService.loadAsResource(subFilePath);
+      filename = file.getFilename();
+      fileByteArray = file.getContentAsByteArray();
+    }
+
+    assert filename != null;
     return ResponseEntity.ok()
-        .header("Content-Disposition", "download; filename=\"" + filename + "\"")
-        .contentType(MediaType.parseMediaType("application/pdf"))
-        .body(file);
+        .header(
+            HttpHeaders.CONTENT_DISPOSITION,
+            "attachment; filename=\"" + URLEncoder.encode(filename, StandardCharsets.UTF_8) + "\"")
+        .body(fileByteArray);
   }
 
   // the file created is a **Directory**
@@ -233,12 +280,14 @@ public class FileUploadController {
     // Create the file in the system
     storageService.create(filePath);
 
+    User currentUser = userService.findByUsername(principal.getName());
+
     // Create the file in the database
     if (subFilePath.equals(rootLocation)
         || Paths.get(subFilePath).getParent().toString().equals(rootLocation)) {
-      fileService.createFile(subFilePath, filename);
+      fileService.createFile(subFilePath, filename, currentUser);
     } else {
-      subFileService.createSubFile(subFilePath, filename, true);
+      subFileService.createSubFile(subFilePath, filename, "Other", " — ", true, currentUser);
     }
 
     return "redirect:/ehz/files/" + uuidString;
@@ -281,7 +330,7 @@ public class FileUploadController {
     // Get user's permission for the uuidString
     String permission = getAccessPermission(principal, subFile);
     // permission cannot be None
-    if (!permission.equals("Download") && !permission.equals("Modify")) {
+    if (!permission.equals("Modify")) {
       throw new AccessDeniedException("Access Denied: User doesn't have the permission to upload");
     }
 
@@ -295,15 +344,67 @@ public class FileUploadController {
 
     storageService.store(files, subFilePath);
 
+    User currentUser = userService.findByUsername(principal.getName());
     // Insert files to the database
-    for (MultipartFile file : files) {
-      subFileService.createSubFile(subFilePath, file.getOriginalFilename(), false);
+    for (MultipartFile multipartFile : files) {
+      subFileService.createSubFile(
+          subFilePath,
+          multipartFile.getOriginalFilename(),
+          multipartFile.getContentType(),
+          FileUtils.byteCountToDisplaySize(multipartFile.getSize()),
+          false,
+          currentUser);
     }
 
     redirectAttributes.addFlashAttribute(
         "message", "You successfully uploaded " + files.length + " files!");
 
     return "redirect:/ehz/files/" + uuidString;
+  }
+
+  @Transactional
+  @PostMapping("/ehz/files/{uuidString}/description")
+  public String fileDescriptionUpdate(
+      @PathVariable String uuidString,
+      @RequestParam("uuidOriginal") String uuidOriginal,
+      @RequestParam("input-description") String descriptionInput,
+      Principal principal,
+      RedirectAttributes redirectAttributes)
+      throws AccessDeniedException {
+    SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
+
+    // Get user's permission for the uuidString
+    String permission = getAccessPermission(principal, subFile);
+    // permission cannot be None
+    if (permission.equals("None")) {
+      throw new AccessDeniedException("Access Denied: User doesn't have the permission to upload");
+    }
+
+    subFile.setDescription(descriptionInput);
+    return "redirect:/ehz/files/" + uuidOriginal;
+  }
+
+  @GetMapping("/ehz/files/{uuidString}/search")
+  public String fileSearch(
+      @RequestParam("q") String query,
+      @PathVariable String uuidString,
+      Principal principal,
+      Model model)
+      throws IOException {
+    SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
+    List<SubFile> subFileList = subFile.getFile().getSubFiles();
+
+    List<Path> paths =
+        subFileList.stream()
+            .filter(file -> file.getDescription().contains(query))
+            .map(f -> Paths.get(f.getSubFilePath()))
+            .collect(Collectors.toList());
+
+    List<Map<String, String>> fileList = createFileList(paths, principal);
+    model.addAttribute("fileList", fileList);
+    model.addAttribute("uuidString", uuidString);
+
+    return "file_search";
   }
 
   @ExceptionHandler(StorageFileNotFoundException.class)

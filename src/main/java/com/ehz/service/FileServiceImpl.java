@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,15 +46,22 @@ public class FileServiceImpl implements FileService {
     file.setFilePath(rootLocation);
     File savedFile = fileRepository.save(file);
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    String uploadDate = now.format(formatter);
+
     SubFile subFile = new SubFile();
     subFile.setSubFilePath(rootLocation);
     subFile.setFile(savedFile);
     subFile.setIsDirectory(true);
+    subFile.setUploadDate(uploadDate);
+    subFile.setFileType("Other");
+
     subFileRepository.save(subFile);
   }
 
   @Transactional
-  public void createFile(String subFilePath, String filename) throws IOException {
+  public void createFile(String subFilePath, String filename, User uploadUser) throws IOException {
     // Save file in FileRepository
     String newFilePath = subFilePath + "/" + filename;
 
@@ -64,11 +73,18 @@ public class FileServiceImpl implements FileService {
     file.setFilePath(newFilePath);
     File savedFile = fileRepository.save(file);
 
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    LocalDateTime now = LocalDateTime.now();
+    String uploadDate = now.format(formatter);
+
     // Create its corresponding subFile, and save it in SubFileRepository
     SubFile newSubFile = new SubFile();
     newSubFile.setFile(savedFile);
     newSubFile.setSubFilePath(savedFile.getFilePath());
     newSubFile.setIsDirectory(true);
+    newSubFile.setFileType("Other");
+    newSubFile.setUploadUser(uploadUser);
+    newSubFile.setUploadDate(uploadDate);
     subFileRepository.save(newSubFile);
 
     // Save all UserFileMapping objects in bulk

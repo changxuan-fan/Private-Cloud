@@ -23,6 +23,22 @@ public class SubFile implements Serializable {
   @Column(nullable = false)
   private Boolean isDirectory;
 
+  @Column(nullable = false)
+  private String fileType;
+
+  @Column(length = 1000)
+  private String description = "";
+
+  @Column(nullable = false)
+  private String uploadDate;
+
+  @Column(nullable = false)
+  private String fileSize = " — ";
+
+  @ManyToOne
+  @JoinColumn(name = "upload_user_id")
+  private User uploadUser;
+
   @ManyToOne
   @JoinColumn(name = "file_id")
   private File file;

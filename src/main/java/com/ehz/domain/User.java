@@ -21,6 +21,9 @@ public class User implements Serializable {
   private String username;
 
   @Column(nullable = false)
+  private String realName;
+
+  @Column(nullable = false)
   private String password;
 
   @OneToMany(mappedBy = "user")

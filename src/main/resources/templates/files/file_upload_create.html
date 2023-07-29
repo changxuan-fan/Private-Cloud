@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8"/>
+        <title>File Upload And Create</title>
+        <link href="/files/file_upload_create.css" media="all" rel="stylesheet" type="text/css"/>
+        <link href="/buttons.css" media="all" rel="stylesheet" type="text/css"/>
+    </head>
+
+    <body>
+        <!-- Check if the user has the permission to create and upload files-->
+        <div class="file-upload-create" th:attr="permission=${permission}"
+             th:style="${permission == 'Modify' ? '' : 'display:none;'}">
+
+            <!-- File Upload Button -->
+            <div>
+                <form id="fileUploadForm" enctype="multipart/form-data" method="POST"
+                      th:action="${'/ehz/files/' + uuidString + '/upload'}">
+                    <input type="file" id="files" name="files" multiple
+                           onChange="document.getElementById('fileUploadForm').submit();" style="display:none;"/>
+                    <button class="submit-button" type="button" onclick="document.getElementById('files').click();">
+                        File Upload
+                    </button>
+                </form>
+            </div>
+
+
+            <!--New Folder Button-->
+            <div>
+
+                <!--Real New Folder Button-->
+                <div>
+                    <button class="submit-button" type="button"
+                            onclick="document.getElementById('div-create').style.display='block'">New Folder
+                    </button>
+                </div>
+
+
+                <!-- Hidden Button for New Folder Button -->
+                <div class="div-create" id="div-create" style="display: none;">
+                    <form class="form-create" method="POST" th:action="${'/ehz/files/' + uuidString + '/create'}">
+                        <label class="label-create" for="filename">New Folder</label>
+                        <input class="filename" id="filename" name="filename" type="text">
+
+                        <div style="text-align: center;">
+                            <button type="button" class="cancel-button"
+                                    onclick="document.getElementById('div-create').style.display='none'">Cancel
+                            </button>
+                            <button type="submit" class="submit-button">Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+</html>
+

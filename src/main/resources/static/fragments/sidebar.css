@@ -1,0 +1,28 @@
+.sidebar ul {
+    list-style-type: none;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    margin: 70px 0 0;
+}
+
+.sidebar li a {
+    font-size: 24px;
+    display: block;
+    color: #000;
+    padding: 16px 40px;
+    text-decoration: none;
+}
+
+.sidebar li a.active {
+    background-color: #04AA6D;
+    color: white;
+}
+
+.sidebar li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}

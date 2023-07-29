@@ -2,19 +2,47 @@ package com.ehz.service;
 
 import com.ehz.domain.File;
 import com.ehz.domain.SubFile;
+import com.ehz.domain.User;
 import com.ehz.repository.FileRepository;
 import com.ehz.repository.SubFileRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SubFileServiceImpl implements SubFileService {
+
+  // Static map to store file types and their extensions
+  private static final Map<String, String> fileTypeMap = new HashMap<>();
+
+  // Static initializer to populate the map
+  static {
+    fileTypeMap.put("application/vnd.ms-powerpoint", "PowerPoint");
+    fileTypeMap.put(
+        "application/vnd.openxmlformats-officedocument.presentationml.presentation", "PowerPoint");
+    fileTypeMap.put("application/msword", "Word");
+    fileTypeMap.put(
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Word");
+    fileTypeMap.put("application/vnd.ms-excel", "Excel");
+    fileTypeMap.put("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Excel");
+    fileTypeMap.put("text/csv", "Excel");
+    fileTypeMap.put("application/pdf", "PDF");
+    fileTypeMap.put("video/mp4", "Video");
+    fileTypeMap.put("video/x-msvideo", "Video");
+    fileTypeMap.put("video/ogg", "Video");
+    fileTypeMap.put("video/mpeg", "Video");
+    fileTypeMap.put("video/webm", "Video");
+    fileTypeMap.put("image/png", "Image");
+    fileTypeMap.put("image/webp", "Image");
+    fileTypeMap.put("image/avif", "Image");
+    fileTypeMap.put("image/gif", "Image");
+    fileTypeMap.put("image/jpeg", "Image");
+    fileTypeMap.put("audio/mpeg", "Audio");
+  }
 
   private final SubFileRepository subFileRepository;
   private final FileRepository fileRepository;
@@ -26,7 +54,13 @@ public class SubFileServiceImpl implements SubFileService {
   }
 
   @Transactional
-  public void createSubFile(String subFilePath, String filename, boolean isDirectory) {
+  public void createSubFile(
+      String subFilePath,
+      String filename,
+      String fileType,
+      String fileSize,
+      boolean isDirectory,
+      User uploadUser) {
 
     // Find the root File with the longest file path length
     List<File> fileList = fileRepository.findAll();
@@ -39,18 +73,27 @@ public class SubFileServiceImpl implements SubFileService {
     // Create the subFile
     if (longestFile != null) {
       String newFilePath = subFilePath + "/" + filename;
+
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+      LocalDateTime now = LocalDateTime.now();
+      String uploadDate = now.format(formatter);
+
       SubFile newSubFile = new SubFile();
       newSubFile.setFile(longestFile);
       newSubFile.setSubFilePath(newFilePath);
       newSubFile.setIsDirectory(isDirectory);
+      newSubFile.setFileType(getTypeExtension(fileType));
+      newSubFile.setUploadDate(uploadDate);
+      newSubFile.setUploadUser(uploadUser);
+      newSubFile.setFileSize(fileSize);
       subFileRepository.save(newSubFile);
     } else {
       throw new IllegalStateException("No matching root file found for the subFile.");
     }
   }
 
-  public void createSubFileSafe(String filePath) {
-    // TODO
+  public String getTypeExtension(String fileType) {
+    return fileTypeMap.getOrDefault(fileType, "Other");
   }
 
   public SubFile findById(UUID uuid) {
@@ -72,10 +115,4 @@ public class SubFileServiceImpl implements SubFileService {
         .findByFile(file)
         .orElseThrow(() -> new EntityNotFoundException("file not present"));
   }
-  //    public SubFile findBySubFilePathSafe(String subFilePath) {
-  //        Optional<SubFile> subFileOptional = subFileRepository.findBySubFilePath(subFilePath);
-  //        if (subFileOptional.isEmpty()) {
-  //
-  //        }
-  //    }
 }
