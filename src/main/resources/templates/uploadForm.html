@@ -1,0 +1,52 @@
+<html xmlns:th="https://www.thymeleaf.org">
+    <body>
+
+        <div th:if="${message}">
+            <h2 th:text="${message}"/>
+        </div>
+
+        <div>
+            <form method="POST" th:action="${'/ehz/files/' + uuidString + '/create'}">
+                <label for="filename"> Input Folder name: </label>
+                <input id="filename" name="filename" type="text">
+                <input type="submit" value="Create Folder">
+            </form>
+        </div>
+
+
+        <div>
+            <form enctype="multipart/form-data" method="POST" th:action="${'/ehz/files/' + uuidString + '/upload'}">
+                <table>
+                    <tr>
+                        <td>File to upload:</td>
+                        <td><input multiple name="files" type="file"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="submit" value="Upload"></td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+
+        <div>
+            <ul>
+                <li th:each="file : ${fileMap}">
+                    <a th:href="@{/ehz/files/{uuid}(uuid=${file.value.uuid})}" th:text="${file.value.filePath}"></a>
+
+                    <form th:action="@{/ehz/files/{uuid}/download(uuid=${file.value.uuid})}" th:method="GET">
+                        <button type="submit">Download</button>
+                    </form>
+
+                    <form th:action="@{/ehz/files/{uuid}/delete(uuid=${file.value.uuid})}" th:method="GET">
+                        <input id="uuidOriginal" name="uuidOriginal" th:value="${uuidString}" type="hidden">
+                        <input type="submit" value="Delete">
+                    </form>
+
+                </li>
+            </ul>
+        </div>
+
+
+    </body>
+</html>

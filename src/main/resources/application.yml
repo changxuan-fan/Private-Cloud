@@ -1,0 +1,30 @@
+# Sql configuration
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/security?useUnicode=yes&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+
+# The name of root directory
+storage:
+  rootLocation: root
+
+# File Converter
+jodconverter:
+  local:
+    enabled: true
+    # 设置LibreOffice主目录
+    office-home: C:/Program Files/LibreOffice
+    # 开启多个LibreOffice进程，每个端口对应一个进程
+    portNumbers: 9080,9081,9089
+    # LibreOffice进程重启前的最大进程数
+    maxTasksPerProcess: 100
