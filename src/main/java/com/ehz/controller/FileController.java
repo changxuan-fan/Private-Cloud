@@ -1,9 +1,6 @@
 package com.ehz.controller;
 
-import com.ehz.domain.File;
-import com.ehz.domain.SubFile;
-import com.ehz.domain.User;
-import com.ehz.domain.UserFileMapping;
+import com.ehz.domain.*;
 import com.ehz.service.FileService;
 import com.ehz.service.SubFileService;
 import com.ehz.service.UserFileMappingService;
@@ -11,7 +8,6 @@ import com.ehz.service.UserService;
 import com.ehz.storage.StorageFileNotFoundException;
 import com.ehz.storage.StorageProperties;
 import com.ehz.storage.StorageService;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -26,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipOutputStream;
 import org.apache.commons.io.FileUtils;
-import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -39,7 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-public class FileUploadController {
+public class FileController {
 
   final UserFileMappingService userFileMappingService;
   private final StorageService storageService;
@@ -47,17 +42,15 @@ public class FileUploadController {
   private final UserService userService;
   private final SubFileService subFileService;
   private final String rootLocation;
-  private final DocumentConverter documentConverter;
 
   @Autowired
-  public FileUploadController(
+  public FileController(
       StorageService storageService,
       FileService fileService,
       UserService userService,
       SubFileService subFileService,
       UserFileMappingService userFileMappingService,
-      StorageProperties storageProperties,
-      DocumentConverter documentConverter) {
+      StorageProperties storageProperties) {
 
     this.storageService = storageService;
     this.fileService = fileService;
@@ -65,11 +58,22 @@ public class FileUploadController {
     this.subFileService = subFileService;
     this.userFileMappingService = userFileMappingService;
     this.rootLocation = storageProperties.getRootLocation();
-    this.documentConverter = documentConverter;
   }
 
-  @GetMapping({"/", "/ehz/files"})
+  private static String getParentString(String filePath) {
+    int lastIndex = filePath.lastIndexOf('/');
+    if (lastIndex == -1) {
+      // If the separator is not found, it means the file is in the root directory
+      return null;
+    }
+    return filePath.substring(0, lastIndex);
+  }
+
+  @GetMapping({"/", "/ehz/files", "/ehz"})
   public String fileListHome() {
+    // Set root directory if it does not exist
+    //    fileService.createRoot();
+
     String uuidString = subFileService.findBySubFilePath(rootLocation).getSubFileId().toString();
 
     return "redirect:/ehz/files/" + uuidString;
@@ -81,29 +85,40 @@ public class FileUploadController {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
     // Get user's permission for the uuidString
-    String permission = getAccessPermission(principal, subFile);
+    Permission permission = getAccessPermission(principal, subFile);
 
     // permission cannot be None
-    if (permission.equals("None")) {
+    if (permission == Permission.NONE) {
       throw new AccessDeniedException(
           "Access Denied: User doesn't have the permission to enter the url");
     }
 
     String subFilePath = subFile.getSubFilePath();
+    // The first two layers of root can only contain directories
+    boolean isInRoot;
+    if (subFilePath.equals(rootLocation)) {
+      isInRoot = true;
+    } else {
+      String parentPath = Paths.get(subFilePath).getParent().toString();
+      isInRoot = Objects.equals(parentPath, rootLocation);
+    }
+
     if (subFile.getIsDirectory()) { // If uuidString refers to a directory, then enter the directory
       List<Path> paths = storageService.loadAll(subFilePath).collect(Collectors.toList());
+
+      List<Map<String, String>> fileParents = getFileParents(subFilePath);
 
       // Create fileList that contains file attributes
       List<Map<String, String>> fileList = createFileList(paths, principal);
       model.addAttribute("fileList", fileList);
       model.addAttribute("uuidString", uuidString);
-      model.addAttribute("permission", permission);
+      model.addAttribute("permission", permission.toString());
+      model.addAttribute("isInRoot", isInRoot);
+      model.addAttribute("fileParents", fileParents);
       return "files";
 
     } else { // If uuidString refers to a file, then display the pdf form
 
-      //            if (permission.equals("Display")) {
-      // get file's byte array
       byte[] fileBytes = getFileBytes(subFilePath);
       if (fileBytes != null) {
         String encodedFile =
@@ -115,6 +130,26 @@ public class FileUploadController {
         throw new AccessDeniedException("File type is not available to open");
       }
     }
+  }
+
+  private List<Map<String, String>> getFileParents(String subFilePath) {
+
+    List<Map<String, String>> fileParents = new LinkedList<>();
+
+    // Get all ancestors' filename as key, uuid as value
+    while (subFilePath != null) {
+      String filename = Paths.get(subFilePath).getFileName().toString();
+      String ancestorUUID = subFileService.findBySubFilePath(subFilePath).getSubFileId().toString();
+
+      Map<String, String> fileParent = new HashMap<>();
+      fileParent.put("filename", filename);
+      fileParent.put("ancestorUUID", ancestorUUID);
+      fileParents.add(0, fileParent);
+
+      subFilePath = getParentString(subFilePath);
+    }
+
+    return fileParents;
   }
 
   // Get byte array of a file
@@ -138,13 +173,13 @@ public class FileUploadController {
   }
 
   // Get current user's permission level of the input url
-  public String getAccessPermission(Principal principal, SubFile subFile) {
+  public Permission getAccessPermission(Principal principal, SubFile subFile) {
     User currentUser = userService.findByUsername(principal.getName());
     File currentFile = subFile.getFile();
     UserFileMapping userFileMapping =
         userFileMappingService.findByUserAndFile(currentUser, currentFile);
 
-    return userFileMapping.getPermission().getPermissionName();
+    return userFileMapping.getPermission();
   }
 
   // Instead of passing the whole File objects, it creates and uses a Map
@@ -158,54 +193,65 @@ public class FileUploadController {
     for (Path path : paths) {
       String filename = path.getFileName().toString();
 
-      // Skip files starting with ".temp_"
-      if (filename.startsWith(".temp_")) {
+      // If file starting with ".temp_display" has no corresponding file, delete it
+      if (filename.startsWith(".temp_display_") && filename.endsWith(".pdf")) {
+        String filteredFilename =
+            filename.substring(".temp_display_".length(), filename.length() - ".pdf".length());
+
+        boolean exists =
+            paths.stream()
+                .map(p -> p.getFileName().toString())
+                .anyMatch(p -> p.equals(filteredFilename));
+
+        // If the corresponding file of "temp_display_" does not exist
+        if (!exists) {
+          storageService.delete(path.toString().replace('\\', '/'));
+        }
         continue;
       }
 
       String subFilePath = path.toString().replace('\\', '/');
 
-      try {
-        // Check if the file exists in the database
-        SubFile subFile = subFileService.findBySubFilePath(subFilePath);
-
-      } catch (EntityNotFoundException e) {
+      // Check if the file exists in the database
+      if (!subFileService.existsBySubFilePath(subFilePath)) {
         // If the file doesn't exist, create it in the database
-        Path modifiedPath = Paths.get(subFilePath);
-        Path parentPath = modifiedPath.getParent();
-        Path grandParentPath = parentPath != null ? parentPath.getParent() : null;
+        String parentPath = getParentString(subFilePath);
+        String grandParentPath = parentPath != null ? getParentString(parentPath) : null;
 
-        if (parentPath != null && parentPath.toString().equals(rootLocation)) {
-          fileService.createFile(parentPath.toString(), filename, null);
-        } else if (grandParentPath != null && grandParentPath.toString().equals(rootLocation)) {
-          fileService.createFile(parentPath.toString(), filename, null);
+        if (parentPath != null && parentPath.equals(rootLocation)
+            || grandParentPath != null && grandParentPath.equals(rootLocation)) {
+          if (fileService.existsByFilePath(subFilePath)) {
+            fileService.deleteFileAndSubFiles(fileService.findByFilePath(subFilePath));
+          }
+          fileService.createFile(parentPath, filename, null);
         } else {
           subFileService.createSubFile(
-              parentPath.toString(), filename, "Other", " — ", Files.isDirectory(path), null);
+              parentPath, filename, "Other", " — ", Files.isDirectory(path), null);
         }
+      }
 
-      } finally {
-        // Fetch the file from the database and check the permission
-        SubFile subFile = subFileService.findBySubFilePath(subFilePath);
-        String permission = getAccessPermission(principal, subFile);
-        User uploadUser = subFile.getUploadUser();
-        String uploadUserRealName = (uploadUser != null) ? uploadUser.getRealName() : "";
+      // Fetch the file from the database and check the permission
+      SubFile subFile = subFileService.findBySubFilePath(subFilePath);
+      Permission permission = getAccessPermission(principal, subFile);
+      User uploadUser = subFile.getUploadUser();
+      String uploadUserRealName = (uploadUser != null) ? uploadUser.getRealName() : "";
 
-        if (!"None".equals(permission)) {
-          // Add file attributes to the fileList
-          Map<String, String> fileAttributes = new HashMap<>();
-          fileAttributes.put("filename", filename);
-          fileAttributes.put("filePath", subFilePath);
-          fileAttributes.put("uuid", subFile.getSubFileId().toString());
-          fileAttributes.put("isDirectory", String.valueOf(subFile.getIsDirectory()));
-          fileAttributes.put("uploadDate", subFile.getUploadDate());
-          fileAttributes.put("uploadUser", uploadUserRealName);
-          fileAttributes.put("fileSize", subFile.getFileSize());
-          fileAttributes.put("fileType", subFile.getFileType());
-          fileAttributes.put("permission", permission);
-          fileAttributes.put("description", subFile.getDescription()); // Could be null
-          fileList.add(fileAttributes);
-        }
+      if (permission != Permission.NONE) {
+        // Add file attributes to the fileList
+        Map<String, String> fileAttributes = new HashMap<>();
+        fileAttributes.put("filename", filename);
+        fileAttributes.put("filePath", subFilePath);
+        fileAttributes.put("uuid", subFile.getSubFileId().toString());
+        fileAttributes.put("isDirectory", String.valueOf(subFile.getIsDirectory()));
+        fileAttributes.put("uploadDate", subFile.getUploadDate());
+        fileAttributes.put("uploadUser", uploadUserRealName);
+        fileAttributes.put("fileSize", subFile.getFileSize());
+        fileAttributes.put("fileType", subFile.getFileType());
+        fileAttributes.put("permission", permission.toString());
+        fileAttributes.put("description", subFile.getDescription());
+        fileAttributes.put("author", subFile.getAuthor());
+
+        fileList.add(fileAttributes);
       }
     }
 
@@ -219,10 +265,10 @@ public class FileUploadController {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
     // Get user's permission for the uuidString
-    String permission = getAccessPermission(principal, subFile);
+    Permission permission = getAccessPermission(principal, subFile);
 
     // permission cannot be None
-    if (!permission.equals("Download") && !permission.equals("Modify")) {
+    if (permission == Permission.NONE) {
       throw new AccessDeniedException(
           "Access Denied: User doesn't have the permission to download");
     }
@@ -269,13 +315,13 @@ public class FileUploadController {
       throws IOException {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
-    String permission = getAccessPermission(principal, subFile);
-    if (!permission.equals("Download") && !permission.equals("Modify")) {
+    Permission permission = getAccessPermission(principal, subFile);
+    if (permission != Permission.MODIFY) {
       throw new AccessDeniedException("Access Denied: User doesn't have the permission to create");
     }
 
     String subFilePath = subFile.getSubFilePath();
-    String filePath = Paths.get(subFilePath, filename).toString();
+    String filePath = subFilePath + "/" + filename;
 
     // Create the file in the system
     storageService.create(filePath);
@@ -283,6 +329,17 @@ public class FileUploadController {
     User currentUser = userService.findByUsername(principal.getName());
 
     // Create the file in the database
+    // *Since we already checked that the file does not exist in the disk*
+    // *Therefore, if it exists in the database, delete it*
+    if (subFileService.existsBySubFilePath(filePath) && fileService.existsByFilePath(filePath)) {
+      fileService.deleteFile(subFileService.findBySubFilePath(filePath), filePath);
+    } else if (fileService.existsByFilePath(filePath)) {
+      File file = fileService.findByFilePath(filePath);
+      fileService.deleteFileAndSubFiles(file);
+    } else if (subFileService.existsBySubFilePath(filePath)) {
+      subFileService.deleteBySubFilePath(filePath);
+    }
+
     if (subFilePath.equals(rootLocation)
         || Paths.get(subFilePath).getParent().toString().equals(rootLocation)) {
       fileService.createFile(subFilePath, filename, currentUser);
@@ -291,6 +348,19 @@ public class FileUploadController {
     }
 
     return "redirect:/ehz/files/" + uuidString;
+  }
+
+  @PostMapping("/ehz/files/{uuidString}/check-duplicates")
+  @ResponseBody
+  public boolean checkDuplicates(
+      @RequestParam("files") String[] fileList, @PathVariable String uuidString)
+      throws AccessDeniedException {
+    SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
+
+    String subFilePath = subFile.getSubFilePath();
+    Path directoryPath = Paths.get(subFilePath);
+
+    return storageService.hasDuplicateConflict(fileList, directoryPath);
   }
 
   @GetMapping("/ehz/files/{uuidString}/delete")
@@ -303,9 +373,9 @@ public class FileUploadController {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
     // Get user's permission for the uuidString
-    String permission = getAccessPermission(principal, subFile);
+    Permission permission = getAccessPermission(principal, subFile);
     // permission cannot be None
-    if (!permission.equals("Modify")) {
+    if (permission != Permission.MODIFY) {
       throw new AccessDeniedException("Access Denied: User doesn't have the permission to delete");
     }
 
@@ -328,9 +398,9 @@ public class FileUploadController {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
     // Get user's permission for the uuidString
-    String permission = getAccessPermission(principal, subFile);
-    // permission cannot be None
-    if (!permission.equals("Modify")) {
+    Permission permission = getAccessPermission(principal, subFile);
+    // permission Must be the MODIFY
+    if (permission != Permission.MODIFY) {
       throw new AccessDeniedException("Access Denied: User doesn't have the permission to upload");
     }
 
@@ -345,6 +415,18 @@ public class FileUploadController {
     storageService.store(files, subFilePath);
 
     User currentUser = userService.findByUsername(principal.getName());
+
+    // If database exists the inserting files' names, delete them
+    for (MultipartFile multipartFile : files) {
+      String newFilePath = subFilePath + "/" + multipartFile.getOriginalFilename();
+      if (subFileService.existsBySubFilePath(newFilePath)) {
+        subFileService.deleteBySubFilePath(newFilePath);
+      }
+    }
+
+    // Store files to the disk
+    storageService.store(files, subFilePath);
+
     // Insert files to the database
     for (MultipartFile multipartFile : files) {
       subFileService.createSubFile(
@@ -374,13 +456,37 @@ public class FileUploadController {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
     // Get user's permission for the uuidString
-    String permission = getAccessPermission(principal, subFile);
+    Permission permission = getAccessPermission(principal, subFile);
     // permission cannot be None
-    if (permission.equals("None")) {
-      throw new AccessDeniedException("Access Denied: User doesn't have the permission to upload");
+    if (permission == Permission.NONE) {
+      throw new AccessDeniedException(
+          "Access Denied: User doesn't have the permission to update the description");
     }
 
     subFile.setDescription(descriptionInput);
+    return "redirect:/ehz/files/" + uuidOriginal;
+  }
+
+  @Transactional
+  @PostMapping("/ehz/files/{uuidString}/author")
+  public String fileAuthorUpdate(
+      @PathVariable String uuidString,
+      @RequestParam("uuidOriginal") String uuidOriginal,
+      @RequestParam("input-author") String authorInput,
+      Principal principal,
+      RedirectAttributes redirectAttributes)
+      throws AccessDeniedException {
+    SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
+
+    // Get user's permission for the uuidString
+    Permission permission = getAccessPermission(principal, subFile);
+    // permission cannot be None
+    if (permission == Permission.NONE) {
+      throw new AccessDeniedException(
+          "Access Denied: User doesn't have the permission to update the author");
+    }
+
+    subFile.setAuthor(authorInput);
     return "redirect:/ehz/files/" + uuidOriginal;
   }
 
@@ -392,19 +498,32 @@ public class FileUploadController {
       Model model)
       throws IOException {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
-    List<SubFile> subFileList = subFile.getFile().getSubFiles();
+    // Get user's permission for the uuidString
+    Permission permission = getAccessPermission(principal, subFile);
+
+    // permission cannot be None
+    if (permission == Permission.NONE) {
+      throw new AccessDeniedException(
+          "Access Denied: User doesn't have the permission to enter the url");
+    }
+
+    Set<SubFile> subFileSet =
+        subFileService.fileSearch(subFile.getSubFilePath(), query, query, query);
+    SubFile root = subFileService.findBySubFilePath(rootLocation);
+
+    // Check if the set contains the root element, and if so, remove it
+    subFileSet.remove(root);
 
     List<Path> paths =
-        subFileList.stream()
-            .filter(file -> file.getDescription().contains(query))
-            .map(f -> Paths.get(f.getSubFilePath()))
-            .collect(Collectors.toList());
+        subFileSet.stream().map(f -> Paths.get(f.getSubFilePath())).collect(Collectors.toList());
 
     List<Map<String, String>> fileList = createFileList(paths, principal);
     model.addAttribute("fileList", fileList);
     model.addAttribute("uuidString", uuidString);
+    model.addAttribute("permission", "Download");
+    model.addAttribute("query", query);
 
-    return "file_search";
+    return "files";
   }
 
   @ExceptionHandler(StorageFileNotFoundException.class)

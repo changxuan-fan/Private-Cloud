@@ -1,48 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8"/>
-        <title>File Table</title>
-        <link href="/files/file_table.css" media="all" rel="stylesheet" type="text/css"/>
-        <link href="/files/file_options.css" media="all" rel="stylesheet" type="text/css"/>
-    </head>
-    <body>
-        <script th:inline="javascript">
-            const fileList = /*[[${fileList}]]*/ '';
-            const uuidString = /*[[${uuidString}]]*/ '';
-        </script>
+  <head>
+    <meta charset="UTF-8" />
+    <title>File Table</title>
+    <link
+      href="/files/file_table.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="/files/file_options.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <script th:inline="javascript">
+      const fileList = /*[[${fileList}]]*/ "";
+      const uuidString = /*[[${uuidString}]]*/ "";
+      const query = /*[[${query}]]*/ null;
+    </script>
 
-        <div class="table-container">
-            <table class="file-table">
-                <thead>
-                    <tr>
-                        <th>
-                            <button id="filename">Name</button>
-                        </th>
-                        <th>
-                            <button id="filePath">Path</button>
-                        </th>
-                        <th>
-                            <button id="uploadDate">Last Uploaded</button>
-                        </th>
-                        <th>
-                            <button id="uploadUser">Upload User</button>
-                        </th>
-                        <th>
-                            <button id="fileSize">File Size</button>
-                        </th>
-                        <th>
-                            <button id="Options">Options</button>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="table-content" id="table-content"></tbody>
-            </table>
-        </div>
+    <div class="table-container">
+      <table class="file-table">
+        <colgroup>
+          <col style="width: 30%" />
+          <col style="width: 30%" />
+          <col style="width: 13%" />
+          <col style="width: 6%" />
+          <col style="width: 6%" />
+          <col style="width: 15%" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>
+              <button id="filename">Name</button>
+            </th>
+            <th>
+              <button id="description">Description</button>
+            </th>
+            <th>
+              <button id="uploadDate">Last Uploaded</button>
+            </th>
+            <th>
+              <button id="author">Author</button>
+            </th>
+            <th>
+              <button id="fileSize">File Size</button>
+            </th>
+            <th>
+              <button id="Options">Options</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody class="table-content" id="table-content"></tbody>
+      </table>
+    </div>
 
-        <div th:replace="~{/files/file_options}"></div>
+    <div th:replace="~{/files/file_options}"></div>
 
-        <script src="/files/file_options.js"></script>
-        <script src="/files/file_table.js"></script>
-    </body>
+    <script src="/files/file_options.js"></script>
+    <script src="/files/file_table.js"></script>
+  </body>
 </html>

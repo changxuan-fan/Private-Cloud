@@ -1,33 +1,32 @@
 /* Style for the Submit and Cancel buttons */
-.cancel-button, .submit-button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    margin: 15px;
-    transition: background-color 0.3s ease;
+.cancel-button,
+.submit-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border: 0;
+  font-size: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  margin: 15px;
+  transition: background-color 0.3s ease;
 }
 
 .cancel-button {
-    background-color: #f44336;
-    color: white;
-    border: 2px solid #f44336;
+  background-color: #f44336;
+  color: white;
 }
 
 .cancel-button:hover {
-    background-color: #d32f2f;
+  background-color: #d32f2f;
 }
 
 .submit-button {
-    background-color: #4caf50;
-    color: white;
-    border: 2px solid #4caf50;
+  background-color: #4caf50;
+  color: white;
 }
 
 .submit-button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
-

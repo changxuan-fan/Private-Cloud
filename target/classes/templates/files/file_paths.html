@@ -1,15 +1,28 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dropdown Example</title>
+    <link
+      href="/files/file_paths.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
 
-    <head>
-        <meta charset="UTF-8"/>
-        <title>Dropdown Example</title>
-        <link href="/files/file_paths.css" media="all" rel="stylesheet" type="text/css"/>
-    </head>
-
-    <body>
-
-
-    </body>
-
+  <body>
+    <nav class="file-paths">
+      <ul>
+        <!-- Loop through the entries of the fileParents Map -->
+        <li th:each="entry : ${fileParents}">
+          <!-- 'entry.key' represents the key of the Map, and 'entry.value' represents the value -->
+          <a
+            th:href="${'/ehz/files/' + entry.ancestorUUID}"
+            th:text="${entry.filename}"
+          ></a>
+        </li>
+      </ul>
+    </nav>
+  </body>
 </html>

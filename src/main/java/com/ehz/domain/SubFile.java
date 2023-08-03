@@ -21,6 +21,9 @@ public class SubFile implements Serializable {
   private String subFilePath;
 
   @Column(nullable = false)
+  private String filename;
+
+  @Column(nullable = false)
   private Boolean isDirectory;
 
   @Column(nullable = false)
@@ -34,6 +37,9 @@ public class SubFile implements Serializable {
 
   @Column(nullable = false)
   private String fileSize = " — ";
+
+  @Column(nullable = false)
+  private String author = " — ";
 
   @ManyToOne
   @JoinColumn(name = "upload_user_id")

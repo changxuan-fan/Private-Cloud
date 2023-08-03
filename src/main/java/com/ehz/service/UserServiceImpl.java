@@ -14,34 +14,26 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final UserFileMappingRepository userFileMappingRepository;
-  private final RoleRepository roleRepository;
   private final FileRepository fileRepository;
-  private final PermissionRepository permissionRepository;
   private final String rootLocation;
 
   @Autowired
   public UserServiceImpl(
       UserRepository userRepository,
       UserFileMappingRepository userFileMappingRepository,
-      RoleRepository roleRepository,
       FileRepository fileRepository,
-      PermissionRepository permissionRepository,
       StorageProperties storageProperties) {
     this.userRepository = userRepository;
     this.userFileMappingRepository = userFileMappingRepository;
-    this.roleRepository = roleRepository;
     this.fileRepository = fileRepository;
-    this.permissionRepository = permissionRepository;
     this.rootLocation = storageProperties.getRootLocation();
   }
 
   @Transactional
   public void createUser(String username, String password, String realName, String roleName) {
     // Retrieve the role from the role repository
-    Role role =
-        roleRepository
-            .findByRoleName(roleName)
-            .orElseThrow(() -> new EntityNotFoundException("Role not present"));
+
+      Role role = Role.valueOf(roleName);
 
     // Create and save the user object
     User user = new User();
@@ -52,19 +44,9 @@ public class UserServiceImpl implements UserService {
     User savedUser = userRepository.save(user);
 
     // Get permission
-    Permission permissionNone =
-        permissionRepository
-            .findByPermissionName("None")
-            .orElseThrow(() -> new EntityNotFoundException("Permission None not present"));
-
-    Permission permissionModify =
-        permissionRepository
-            .findByPermissionName("Modify")
-            .orElseThrow(() -> new EntityNotFoundException("Permission Modify not present"));
-    Permission permissionDisplay =
-        permissionRepository
-            .findByPermissionName("Display")
-            .orElseThrow(() -> new EntityNotFoundException("Permission Display not present"));
+    Permission permissionNone = Permission.NONE;
+    Permission permissionDisplay = Permission.DISPLAY;
+    Permission permissionModify = Permission.MODIFY;
 
     // Get Root
     File root =

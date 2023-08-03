@@ -5,10 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -64,32 +61,8 @@ public class FileSystemStorageService implements StorageService {
   public void store(MultipartFile[] files, String filePath) {
     try {
       Path directoryPath = Paths.get(filePath);
-      Set<String> existingFilenames = new HashSet<>();
 
-      // Collect all the file names to check for conflicts
-      for (MultipartFile file : files) {
-        String filename = file.getOriginalFilename();
-        assert filename != null;
-        Path filePathInDirectory = directoryPath.resolve(filename);
-
-        // Convert the file to pdf form, with name appended with .temp_display_
-        String tempFilename = appendTempAndPdf(filename);
-        Path temFilePathInDirectory = directoryPath.resolve(tempFilename);
-
-        if (existingFilenames.contains(filename) || Files.exists(filePathInDirectory)) {
-          throw new IllegalArgumentException("File with the same name already exists: " + filename);
-        }
-
-        if (existingFilenames.contains(tempFilename) || Files.exists(temFilePathInDirectory)) {
-          throw new IllegalArgumentException(
-              "Temp File with the same name already exists: " + filename);
-        }
-
-        existingFilenames.add(filename);
-        existingFilenames.add(tempFilename);
-      }
-
-      // If no conflicts, copy the files
+      // If no conflicts, copy the files, otherwise replace the existing files
       for (MultipartFile file : files) {
         String filename = file.getOriginalFilename();
         String contentType = file.getContentType();
@@ -98,10 +71,15 @@ public class FileSystemStorageService implements StorageService {
           Path filePathInDirectory = directoryPath.resolve(filename);
           String tempFilename = appendTempAndPdf(filename);
 
+          // Delete temp if the real file does not exist
           Path tempFilePathInDirectory = directoryPath.resolve(tempFilename);
+          if (Files.exists(tempFilePathInDirectory)) {
+            Files.delete(tempFilePathInDirectory);
+          }
 
           try (InputStream inputStream = file.getInputStream()) {
-            Files.copy(inputStream, filePathInDirectory);
+            // replace existing files
+            Files.copy(inputStream, filePathInDirectory, StandardCopyOption.REPLACE_EXISTING);
           }
 
           // Create temp file
@@ -119,6 +97,19 @@ public class FileSystemStorageService implements StorageService {
     } catch (OfficeException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  @Override
+  public boolean hasDuplicateConflict(String[] fileList, Path directoryPath) {
+    // Collect all the file names to check for conflicts
+    for (String filename : fileList) {
+      Path filePathInDirectory = directoryPath.resolve(filename);
+
+      if (Files.exists(filePathInDirectory)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override

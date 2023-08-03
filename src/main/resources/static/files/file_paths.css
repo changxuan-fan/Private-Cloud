@@ -1,0 +1,31 @@
+.file-paths ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: 20px;
+}
+
+.file-paths li {
+  float: left;
+}
+
+.file-paths li:not(:last-child) a::after {
+  content: "/";
+  padding-left: 15px;
+  color: black;
+}
+
+.file-paths li a {
+  display: block;
+  text-align: center;
+  padding-left: 15px;
+  text-decoration: none;
+  color: dodgerblue;
+  cursor: pointer;
+}
+
+.file-paths li:last-child a {
+  color: black;
+  pointer-events: none; /* This will make the last li not clickable */
+}

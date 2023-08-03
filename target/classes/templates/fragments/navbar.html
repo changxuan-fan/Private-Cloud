@@ -1,22 +1,33 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Navigation Bar</title>
+    <link
+      href="/fragments/navbar.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
 
-    <head>
-        <meta charset="UTF-8"/>
-        <title>Navigation Bar</title>
-        <link href="/fragments/navbar.css" media="all" rel="stylesheet" type="text/css"/>
-    </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+      <div class="navbar-logo">EHZ</div>
 
-    <body>
+      <form method="Get" th:action="${'/ehz/files/' + uuidString + '/search'}">
+        <input
+          class="navbar-search"
+          id="q"
+          name="q"
+          th:attr="placeholder=${#strings.isEmpty(query) ? 'Search in current Folder' : ''}"
+          th:value="${query}"
+          type="text"
+        />
+      </form>
 
-        <!-- Navigation bar -->
-        <nav class="navbar">
-            <div class="navbar-logo">EHZ</div>
-            <label class="sr-only" for="searchInput">Search</label>
-            <input class="navbar-search" id="searchInput" placeholder="Search..." type="text">
-            <button aria-label="User Profile" class="navbar-profile">User Profile</button>
-        </nav>
-
-    </body>
-
+      <!--            <button aria-label="User Profile" class="navbar-profile">User Profile</button>-->
+    </nav>
+  </body>
 </html>

@@ -20,7 +20,6 @@ public class FileServiceImpl implements FileService {
   private final UserRepository userRepository;
   private final UserFileMappingRepository userFileMappingRepository;
   private final FileRepository fileRepository;
-  private final PermissionRepository permissionRepository;
   private final SubFileRepository subFileRepository;
   private final String rootLocation;
 
@@ -29,35 +28,40 @@ public class FileServiceImpl implements FileService {
       UserRepository userRepository,
       UserFileMappingRepository userFileMappingRepository,
       FileRepository fileRepository,
-      PermissionRepository permissionRepository,
       SubFileRepository subFileRepository,
       StorageProperties storageProperties) {
     this.userRepository = userRepository;
     this.userFileMappingRepository = userFileMappingRepository;
     this.fileRepository = fileRepository;
-    this.permissionRepository = permissionRepository;
     this.subFileRepository = subFileRepository;
     this.rootLocation = storageProperties.getRootLocation();
   }
 
+  private static String getUploadDate() {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+    LocalDateTime now = LocalDateTime.now();
+    return now.format(formatter);
+  }
+
   @Transactional
   public void createRoot() {
-    File file = new File();
-    file.setFilePath(rootLocation);
-    File savedFile = fileRepository.save(file);
+    if(!fileRepository.existsByFilePath(rootLocation)) {
+      File file = new File();
+      file.setFilePath(rootLocation);
+      File savedFile = fileRepository.save(file);
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    LocalDateTime now = LocalDateTime.now();
-    String uploadDate = now.format(formatter);
+      String uploadDate = getUploadDate();
 
-    SubFile subFile = new SubFile();
-    subFile.setSubFilePath(rootLocation);
-    subFile.setFile(savedFile);
-    subFile.setIsDirectory(true);
-    subFile.setUploadDate(uploadDate);
-    subFile.setFileType("Other");
+      SubFile subFile = new SubFile();
+      subFile.setSubFilePath(rootLocation);
+      subFile.setFilename(rootLocation);
+      subFile.setFile(savedFile);
+      subFile.setIsDirectory(true);
+      subFile.setUploadDate(uploadDate);
+      subFile.setFileType("Other");
 
-    subFileRepository.save(subFile);
+      subFileRepository.save(subFile);
+    }
   }
 
   @Transactional
@@ -73,9 +77,7 @@ public class FileServiceImpl implements FileService {
     file.setFilePath(newFilePath);
     File savedFile = fileRepository.save(file);
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    LocalDateTime now = LocalDateTime.now();
-    String uploadDate = now.format(formatter);
+    String uploadDate = getUploadDate();
 
     // Create its corresponding subFile, and save it in SubFileRepository
     SubFile newSubFile = new SubFile();
@@ -85,26 +87,22 @@ public class FileServiceImpl implements FileService {
     newSubFile.setFileType("Other");
     newSubFile.setUploadUser(uploadUser);
     newSubFile.setUploadDate(uploadDate);
+    newSubFile.setFilename(filename);
     subFileRepository.save(newSubFile);
 
+
     // Save all UserFileMapping objects in bulk
-    Permission permissionDisplay =
-        permissionRepository
-            .findByPermissionName("Display")
-            .orElseThrow(() -> new EntityNotFoundException("Permission Display not present"));
-    Permission permissionModify =
-        permissionRepository
-            .findByPermissionName("Modify")
-            .orElseThrow(() -> new EntityNotFoundException("Permission Modify not present"));
+    Permission permissionDisplay = Permission.DISPLAY;
+    Permission permissionModify = Permission.MODIFY;
 
     List<User> users = userRepository.findAll();
     List<UserFileMapping> mappings = new ArrayList<>();
 
     // Assign permission level based on Roles
     for (User user : users) {
-      if (user.getRole().getRoleName().equals("ADMIN")) {
+      if (user.getRole() == Role.ADMIN) {
         mappings.add(new UserFileMapping(user, savedFile, permissionModify));
-      } else if (user.getRole().getRoleName().equals("USER")) {
+      } else if (user.getRole() == Role.USER) {
         mappings.add(new UserFileMapping(user, savedFile, permissionDisplay));
       } else {
         // Handle other cases or throw an exception
@@ -124,6 +122,7 @@ public class FileServiceImpl implements FileService {
     File file = subFile.getFile();
     String filePath = file.getFilePath();
 
+
     // Delete the entry in File
     if (subFilePath.equals(filePath)) {
 
@@ -141,11 +140,17 @@ public class FileServiceImpl implements FileService {
     }
   }
 
-  private void deleteFileAndSubFiles(File file) {
+  @Transactional
+  public void deleteFileAndSubFiles(File file) {
     userFileMappingRepository.deleteAll(file.getUserFileMappings());
     subFileRepository.deleteAll(file.getSubFiles());
     fileRepository.delete(file);
   }
+
+  public boolean existsByFilePath(String subFilePath) {
+    return fileRepository.existsByFilePath(subFilePath);
+  }
+
 
   public File findByFilePath(String filePath) {
     return fileRepository

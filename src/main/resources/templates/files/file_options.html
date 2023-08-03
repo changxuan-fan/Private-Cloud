@@ -1,69 +1,129 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link
+      href="/files/file_options.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="/buttons.css" media="all" rel="stylesheet" type="text/css" />
+  </head>
 
-    <head>
-        <title></title>
-        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-        <link href="/files/file_options.css" media="all" rel="stylesheet"
-              type="text/css"/>
-        <link href="/buttons.css" media="all" rel="stylesheet"
-              type="text/css"/>
-    </head>
+  <body>
+    <div class="file-options">
+      <!-- Description Button-->
+      <div class="div-description" id="div-description" style="display: none">
+        <form
+          action="#"
+          class="form-description"
+          id="form-description"
+          method="post"
+        >
+          <label class="label-description" for="input-description"
+            ><b>Description</b></label
+          >
 
-    <body>
+          <textarea
+            class="input-description"
+            cols="80"
+            form="form-description"
+            id="input-description"
+            name="input-description"
+            rows="20"
+          ></textarea>
 
-        <div class="file-options">
+          <label>
+            <input
+              class="input-description-hidden"
+              name="uuidOriginal"
+              style="display: none"
+              value="#"
+            />
+          </label>
 
-            <!-- Description Button-->
-            <div class="div-description" id="div-description" style="display: none;">
-                <form action="#" id="form-description" class="form-description" method="post">
-                    <label class="label-description" for="input-description"><b>Description</b></label>
+          <div style="text-align: center">
+            <button
+              class="cancel-button"
+              onclick="document.getElementById('div-description').style.display='none'"
+              type="button"
+            >
+              Cancel
+            </button>
+            <button class="submit-button" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
 
-                    <textarea class="input-description" id="input-description" rows="20" cols="80"
-                              name="input-description"
-                              form="form-description"></textarea>
+      <!-- Download Button-->
+      <div class="div-download" id="div-download" style="display: none">
+        <form action="#" class="form-download" th:method="GET">
+          <input type="submit" value="Download" />
+        </form>
+      </div>
 
-                    <label>
-                        <input class="input-description-hidden" name="uuidOriginal" value="#" style="display: none;">
-                    </label>
+      <!-- Author Button-->
+      <div class="div-author" id="div-author" style="display: none">
+        <form action="#" class="form-author" id="form-author" method="post">
+          <label class="label-author" for="input-author"><b>Author</b></label>
 
-                    <div style="text-align: center;">
-                        <button type="button" class="cancel-button"
-                                onclick="document.getElementById('div-description').style.display='none'">Cancel
-                        </button>
-                        <button type="submit" class="submit-button">Submit</button>
-                    </div>
-                </form>
-            </div>
+          <input
+            class="input-author"
+            id="input-author"
+            name="input-author"
+            style="cursor: text"
+            type="text"
+          />
 
+          <label>
+            <input
+              class="input-author-hidden"
+              name="uuidOriginal"
+              style="display: none"
+              value="#"
+            />
+          </label>
 
-            <!-- Download Button-->
-            <div class="div-download" id="div-download" style="display: none;">
-                <form action="#" class="form-download" th:method="GET">
-                    <input type="submit" value="Download">
-                </form>
-            </div>
+          <div style="text-align: center">
+            <button
+              class="cancel-button"
+              onclick="document.getElementById('div-author').style.display='none'"
+              type="button"
+            >
+              Cancel
+            </button>
+            <button class="submit-button" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
 
-
-            <!-- Delete Button-->
-            <div class="div-delete" id="div-delete" style="display: none;">
-                <form action="#" class="form-delete" th:method="GET">
-                    <label class="label-delete">Delete Permanently?</label>
-                    <label>
-                        <input class="input-delete-hidden" name="uuidOriginal" value="#" style="display: none;">
-                    </label>
-                    <div style="text-align: center;">
-                        <button type="button" class="cancel-button"
-                                onclick="document.getElementById('div-delete').style.display='none'">Cancel
-                        </button>
-                        <button type="submit" class="submit-button">Delete</button>
-                    </div>
-                </form>
-            </div>
-
-        </div>
-
-    </body>
-
+      <!-- Delete Button-->
+      <div class="div-delete" id="div-delete" style="display: none">
+        <form action="#" class="form-delete" th:method="GET">
+          <label class="label-delete">Delete Permanently?</label>
+          <label>
+            <input
+              class="input-delete-hidden"
+              name="uuidOriginal"
+              style="display: none"
+              value="#"
+            />
+          </label>
+          <div style="text-align: center">
+            <button
+              class="cancel-button"
+              onclick="document.getElementById('div-delete').style.display='none'"
+              type="button"
+            >
+              Cancel
+            </button>
+            <button class="submit-button" type="submit">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>

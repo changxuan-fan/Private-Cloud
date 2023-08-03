@@ -1,61 +1,90 @@
 /*
-Common Attribute of the two buttons
+Common Attribute of Options' buttons
 */
 /* The blocked grey entire screen's background after clicking the button */
-.div-delete, .div-description {
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black background */
+.div-delete,
+.div-description,
+.div-author {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black background */
 }
 
-.form-delete, .form-description {
-    background-color: #fefefe;
-    margin: auto;
-    border: 1px solid #888;
-    bottom: 0;
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 0;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+.form-delete,
+.form-description,
+.form-author {
+  background-color: #fefefe;
+  margin: auto;
+  border: 1px solid #888;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 /*
 Description Button
 */
 .form-description {
-
-    width: 607px;
-    height: 450px;
-
+  width: 607px;
+  height: 450px;
 }
 
 .label-description {
-    font-size: 26px;
-    text-align: center;
-    display: block;
+  font-size: 26px;
+  text-align: center;
+  display: block;
 }
 
 /* The textarea for description */
 .input-description {
-    width: 100%;
-    padding: 12px 20px;
-    margin: 14px 0 10px;
-    display: inline-block;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-    border-radius: 15px;
+  width: 100%;
+  padding: 12px 20px;
+  margin: 14px 0 10px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 15px;
+  cursor: text;
 }
 
 .submit-cancel-buttons-description {
-    text-align: center;
+  text-align: center;
+}
+
+/*
+Author Button
+*/
+.form-author {
+  width: 300px;
+  height: 160px;
+}
+
+.label-author {
+  font-size: 26px;
+  text-align: left;
+  display: block;
+}
+
+/* The text for author */
+.input-author {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 20px 0 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-size: 16px;
 }
 
 /*
@@ -64,17 +93,14 @@ Delete Button
 
 /* Delete form in the center of the screen*/
 .form-delete {
-
-    width: 300px;
-    height: 130px;
-
+  width: 300px;
+  height: 130px;
 }
 
 /* Alert label of deleting */
 .label-delete {
-    font-size: 26px;
-    text-align: center;
-    display: block;
-    padding-bottom: 30px;
+  font-size: 26px;
+  text-align: center;
+  display: block;
+  padding-bottom: 30px;
 }
-

@@ -11,49 +11,79 @@
     <body>
         <!-- Check if the user has the permission to create and upload files-->
         <div class="file-upload-create" th:attr="permission=${permission}"
-             th:style="${permission == 'Modify' ? '' : 'display:none;'}">
-
-            <!-- File Upload Button -->
-            <div>
-                <form id="fileUploadForm" enctype="multipart/form-data" method="POST"
-                      th:action="${'/ehz/files/' + uuidString + '/upload'}">
-                    <input type="file" id="files" name="files" multiple
-                           onChange="document.getElementById('fileUploadForm').submit();" style="display:none;"/>
-                    <button class="submit-button" type="button" onclick="document.getElementById('files').click();">
-                        File Upload
-                    </button>
-                </form>
-            </div>
-
+             th:style="${permission == 'MODIFY' ? '' : 'display:none;'}">
 
             <!--New Folder Button-->
             <div>
 
                 <!--Real New Folder Button-->
                 <div>
-                    <button class="submit-button" type="button"
-                            onclick="document.getElementById('div-create').style.display='block'">New Folder
+                    <button class="submit-button" onclick="document.getElementById('div-create').style.display='block'"
+                            type="button">New Folder
                     </button>
                 </div>
 
 
-                <!-- Hidden Button for New Folder Button -->
+                <!-- Hidden Form for New Folder Button -->
                 <div class="div-create" id="div-create" style="display: none;">
-                    <form class="form-create" method="POST" th:action="${'/ehz/files/' + uuidString + '/create'}">
+                    <form class="form-create" id="form-create" method="POST"
+                          th:action="${'/ehz/files/' + uuidString + '/create'}">
                         <label class="label-create" for="filename">New Folder</label>
-                        <input class="filename" id="filename" name="filename" type="text">
+                        <label class="label-create-hidden" id="label-create-hidden" style="visibility: hidden">Folder
+                            Name is empty or already
+                            exists!!!</label>
+                        <input class="filename" id="filename" name="filename" style="cursor: text;" type="text">
 
                         <div style="text-align: center;">
-                            <button type="button" class="cancel-button"
-                                    onclick="document.getElementById('div-create').style.display='none'">Cancel
+                            <button class="cancel-button"
+                                    onclick="document.getElementById('div-create').style.display='none'"
+                                    type="button">Cancel
                             </button>
-                            <button type="submit" class="submit-button">Delete</button>
+                            <button class="submit-button" onclick="checkDuplicateFolder();"
+                                    type="button">Replace
+                            </button>
                         </div>
                     </form>
                 </div>
             </div>
 
+            <div th:style="${isInRoot == false ? '' : 'display:none;'}">
+                <!-- File Upload Button -->
+                <div>
+                    <form enctype="multipart/form-data" id="fileUploadForm" method="POST"
+                          th:action="${'/ehz/files/' + uuidString + '/upload'}">
+                        <input id="files" multiple name="files"
+                               onclick="this.value = null;" style="display:none;" type="file"/>
+                        <button class="submit-button" onclick="document.getElementById('files').click();" type="button">
+                            File Upload
+                        </button>
+                    </form>
+                </div>
+
+                <!--Replace Files if exist-->
+                <div class="div-upload" id="div-upload" style="display: none;">
+                    <form class="form-upload">
+                        <label class="label-upload">Replace or Keep?</label>
+                        <div style="text-align: center;">
+                            <button class="cancel-button"
+                                    onclick="document.getElementById('div-upload').style.display='none'"
+                                    type="button">Cancel
+                            </button>
+                            <button class="submit-button" onclick=document.getElementById('fileUploadForm').submit();
+                                    type="button">Replace
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
         </div>
+
+        <script th:inline="javascript">
+            const uuid = /*[[${uuidString}]]*/ '';
+        </script>
+        <script src="/files/file_upload_create.js"></script>
 
     </body>
 </html>

@@ -12,5 +12,9 @@ public interface FileService {
 
   void deleteFile(SubFile subFile, String subFilePath);
 
+  void deleteFileAndSubFiles(File file);
+
+  boolean existsByFilePath(String subFilePath);
+
   File findByFilePath(String filePath);
 }

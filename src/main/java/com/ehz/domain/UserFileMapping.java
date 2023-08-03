@@ -23,8 +23,8 @@ public class UserFileMapping implements Serializable {
   @JoinColumn(name = "file_id")
   private File file;
 
-  @Id
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "permission_id")
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "permission", nullable = false)
   private Permission permission;
 }

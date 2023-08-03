@@ -70,11 +70,12 @@ public class SubFileServiceImpl implements SubFileService {
             .max(Comparator.comparingInt(file -> file.getFilePath().length()));
     File longestFile = longestFilePath.orElse(null);
 
+
     // Create the subFile
     if (longestFile != null) {
       String newFilePath = subFilePath + "/" + filename;
 
-      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
       LocalDateTime now = LocalDateTime.now();
       String uploadDate = now.format(formatter);
 
@@ -86,6 +87,7 @@ public class SubFileServiceImpl implements SubFileService {
       newSubFile.setUploadDate(uploadDate);
       newSubFile.setUploadUser(uploadUser);
       newSubFile.setFileSize(fileSize);
+      newSubFile.setFilename(filename);
       subFileRepository.save(newSubFile);
     } else {
       throw new IllegalStateException("No matching root file found for the subFile.");
@@ -115,4 +117,21 @@ public class SubFileServiceImpl implements SubFileService {
         .findByFile(file)
         .orElseThrow(() -> new EntityNotFoundException("file not present"));
   }
+
+  public boolean existsBySubFilePath(String subFilePath) {
+    return subFileRepository.existsBySubFilePath(subFilePath);
+  }
+
+  public Set<SubFile> fileSearch(String subFilePath, String description, String author, String filename) {
+    return subFileRepository.fileSearch(subFilePath, description, author, filename);
+  }
+
+  @Transactional
+  public void deleteBySubFilePath(String subFilePath) {
+     subFileRepository.deleteBySubFilePath(subFilePath);
+    // Delete files inside if it is directory
+    subFileRepository.deleteBySubFilePathStartingWith(subFilePath);
+
+  }
+
 }

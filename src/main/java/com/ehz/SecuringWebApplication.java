@@ -1,5 +1,7 @@
 package com.ehz;
 
+import com.ehz.service.FileService;
+import com.ehz.service.UserService;
 import com.ehz.storage.StorageProperties;
 import com.ehz.storage.StorageService;
 import org.springframework.boot.CommandLineRunner;
@@ -14,12 +16,18 @@ public class SecuringWebApplication {
 
   public static void main(String[] args) throws Throwable {
     SpringApplication.run(SecuringWebApplication.class, args);
+
+
   }
 
   @Bean
-  CommandLineRunner init(StorageService storageService) {
+  CommandLineRunner init(StorageService storageService,  FileService fileService, UserService userService) {
     return (args) -> {
-      storageService.init();
+//      storageService.init();
+//      fileService.createRoot();
+//      userService.createUser("kevin", "{noop}140", "Kevin", "ADMIN");
+//
+//      userService.createUser("jack", "{noop}140", "Jack", "USER");
     };
   }
 }

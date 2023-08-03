@@ -1,24 +1,25 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sidebar Example</title>
+    <link
+      href="/fragments/sidebar.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
 
-    <head>
-        <meta charset="UTF-8"/>
-        <title>Sidebar Example</title>
-        <link href="/fragments/sidebar.css" media="all" rel="stylesheet" type="text/css"/>
-    </head>
-
-    <body>
-
-        <!-- Sidebar -->
-        <nav class="sidebar">
-            <ul>
-                <li><a class="active" href="#home">Home</a></li>
-                <li><a href="#news">News</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#about">About</a></li>
-            </ul>
-        </nav>
-
-    </body>
-
+  <body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+      <ul>
+        <li><a class="active" href="#home">Home</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </nav>
+  </body>
 </html>

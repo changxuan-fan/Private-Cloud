@@ -29,7 +29,7 @@ public class User implements Serializable {
   @OneToMany(mappedBy = "user")
   private List<UserFileMapping> userFileMappings;
 
-  @ManyToOne
-  @JoinColumn(name = "role_id")
+  @Enumerated(EnumType.STRING)
+  @Column(name = "role", nullable = false)
   private Role role;
 }

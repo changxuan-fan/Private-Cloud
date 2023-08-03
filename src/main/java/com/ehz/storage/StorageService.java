@@ -15,6 +15,8 @@ public interface StorageService {
 
   void store(MultipartFile[] file, String filePath);
 
+  boolean hasDuplicateConflict(String[] fileList, Path directoryPath);
+
   Stream<Path> loadAll(String filePath);
 
   Path load(String filePath);

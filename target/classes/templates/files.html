@@ -1,30 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 
 <html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
 
-    <head>
-        <title></title>
-        <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
-        <!--        <link rel="stylesheet" type="text/css" media="all"-->
-        <!--              href="" th:href=""/>-->
-        <style>
-            body {
-                margin: 0;
-                font-family: Arial, Helvetica, sans-serif;
-            }
-        </style>
-    </head>
+  <body style="margin: 0">
+    <!-- Include the navigation fragment -->
+    <div th:replace="~{fragments/navbar}"></div>
 
-    <body>
+    <!-- Include the sidebar fragment -->
+    <div th:replace="~{/fragments/sidebar}"></div>
 
-        <!-- Include the navigation fragment -->
-        <div th:replace="~{fragments/navbar}"></div>
-
-        <!-- Include the sidebar fragment -->
-        <div th:replace="~{/fragments/sidebar}"></div>
-
-        <!-- Include the main content fragment -->
-        <div th:replace="~{/files/file_main}"></div>
-    </body>
-
+    <!-- Include the main content fragment -->
+    <div th:replace="~{/files/file_main}"></div>
+  </body>
 </html>

@@ -1,54 +1,53 @@
 /* Navigation bar styles */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 70px;
-    padding: 0 20px;
-    background-color: #f1f1f1;
-    color: #000;
-    position: fixed;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  height: 70px;
+  padding: 0 20px;
+  background-color: #f1f1f1;
+  color: #000;
+  position: fixed;
+  width: 100%;
 }
 
 /* Logo */
 .navbar-logo {
-    padding: 40px;
-    font-size: 28px;
-    font-weight: bold;
+  padding: 40px;
+  font-size: 28px;
+  font-weight: bold;
 }
 
 /* Search bar */
 .navbar-search {
-    position: absolute;
-    left: 250px;
-    font-size: 20px;
-    padding: 10px 20px;
-    border: none;
-    outline: none;
-    border-radius: 20px;
-    background-color: #fff;
-    color: #333;
-    width: calc(100vw - 400px); /* Subtract 350px from the viewport width */
-    max-width: 400px; /* Limit the maximum width to 400px */
+  left: 250px;
+  font-size: 20px;
+  padding: 10px 20px;
+  border: none;
+  outline: none;
+  border-radius: 20px;
+  background-color: #fff;
+  color: #333;
+  width: calc(100vw - 400px); /* Subtract 350px from the viewport width */
+  max-width: 400px; /* Limit the maximum width to 400px */
+  margin-left: 23px;
 }
 
 /* Profile button */
 .navbar-profile {
-    cursor: pointer;
-    font-size: 16px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    background-color: #4CAF50; /* Green background color */
-    color: white; /* Text color */
-    transition: background-color 0.3s ease; /* Add a smooth background color transition on hover */
+  cursor: pointer;
+  font-size: 16px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50; /* Green background color */
+  color: white; /* Text color */
+  transition: background-color 0.3s ease; /* Add a smooth background color transition on hover */
 }
 
 /* Apply hover and focus styles */
 .navbar-profile:hover,
 .navbar-profile:focus {
-    background-color: #45a049; /* Darker green on hover */
-    outline: none; /* Remove focus outline */
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add a slight shadow on focus */
+  background-color: #45a049; /* Darker green on hover */
+  outline: none; /* Remove focus outline */
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add a slight shadow on focus */
 }

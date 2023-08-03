@@ -11,20 +11,18 @@ public class DaoTests {
   @Autowired private FileService fileService;
 
   @Autowired private UserService userService;
-  @Autowired private RoleService roleService;
-  @Autowired private PermissionService permissionService;
   @Autowired private SubFileService subFileService;
 
   @Test
   public void DaoTest() throws IOException {
+//
+//    roleService.createRole("ADMIN");
+//    roleService.createRole("USER");
 
-    roleService.createRole("ADMIN");
-    roleService.createRole("USER");
-
-    permissionService.createPermission("None");
-    permissionService.createPermission("Display");
-    permissionService.createPermission("Download");
-    permissionService.createPermission("Modify");
+//    permissionService.createPermission("None");
+//    permissionService.createPermission("Display");
+//    permissionService.createPermission("Download");
+//    permissionService.createPermission("Modify");
 
     fileService.createRoot();
     userService.createUser("kevin", "{noop}140", "Kevin", "ADMIN");
