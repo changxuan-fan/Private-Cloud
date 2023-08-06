@@ -37,8 +37,7 @@ public class SubFileServiceImpl implements SubFileService {
     fileTypeMap.put("video/mpeg", "Video");
     fileTypeMap.put("video/webm", "Video");
     fileTypeMap.put("image/png", "Image");
-    fileTypeMap.put("image/webp", "Image");
-    fileTypeMap.put("image/avif", "Image");
+    fileTypeMap.put("image/tiff", "Image");
     fileTypeMap.put("image/gif", "Image");
     fileTypeMap.put("image/jpeg", "Image");
     fileTypeMap.put("audio/mpeg", "Audio");

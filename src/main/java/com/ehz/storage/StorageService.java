@@ -2,7 +2,7 @@ package com.ehz.storage;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 import java.util.zip.ZipOutputStream;
@@ -27,7 +27,7 @@ public interface StorageService {
 
   void delete(String filePath);
 
-  void create(String filePath) throws FileAlreadyExistsException;
+  void create(String filePath) throws FileSystemException;
 
   void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException;
 }

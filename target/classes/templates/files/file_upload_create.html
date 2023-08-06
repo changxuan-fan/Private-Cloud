@@ -29,18 +29,18 @@
                     <form class="form-create" id="form-create" method="POST"
                           th:action="${'/ehz/files/' + uuidString + '/create'}">
                         <label class="label-create" for="filename">New Folder</label>
-                        <label class="label-create-hidden" id="label-create-hidden" style="visibility: hidden">Folder
-                            Name is empty or already
-                            exists!!!</label>
-                        <input class="filename" id="filename" name="filename" style="cursor: text;" type="text">
+                        <label class="label-create-hidden" id="label-create-hidden" style="visibility: hidden">Existed
+                            Or Illegal Folder Name!!!</label>
+                        <input class="filename" id="filename" maxlength="255" name="filename" required
+                               style="cursor: text;" type="text">
 
                         <div style="text-align: center;">
                             <button class="cancel-button"
                                     onclick="document.getElementById('div-create').style.display='none'"
                                     type="button">Cancel
                             </button>
-                            <button class="submit-button" onclick="checkDuplicateFolder();"
-                                    type="button">Replace
+                            <button class="submit-button"
+                                    type="submit">Submit
                             </button>
                         </div>
                     </form>

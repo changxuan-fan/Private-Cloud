@@ -14,18 +14,32 @@
   <body>
     <!-- Navigation bar -->
     <nav class="navbar">
+      <!-- Logo-->
       <div class="navbar-logo">EHZ</div>
 
-      <form method="Get" th:action="${'/ehz/files/' + uuidString + '/search'}">
-        <input
-          class="navbar-search"
-          id="q"
-          name="q"
-          th:attr="placeholder=${#strings.isEmpty(query) ? 'Search in current Folder' : ''}"
-          th:value="${query}"
-          type="text"
-        />
-      </form>
+      <!-- Search Bar-->
+      <div style="width: 1450px">
+        <form
+          method="Get"
+          th:action="${'/ehz/files/' + uuidString + '/search'}"
+        >
+          <input
+            class="navbar-search"
+            id="q"
+            name="q"
+            th:attr="placeholder=${#strings.isEmpty(query) ? 'Search in current Folder' : ''}"
+            th:value="${query}"
+            type="text"
+          />
+        </form>
+      </div>
+
+      <!--Sign Out-->
+      <div class="sign-out">
+        <form method="post" th:action="@{/logout}">
+          <button class="cancel-button" type="submit">Sign Out</button>
+        </form>
+      </div>
 
       <!--            <button aria-label="User Profile" class="navbar-profile">User Profile</button>-->
     </nav>

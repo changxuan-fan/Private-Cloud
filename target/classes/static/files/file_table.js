@@ -84,7 +84,6 @@ const createRow = (obj) => {
   descriptionButton.appendChild(imgTagDescription);
   descriptionButton.dataset.description = description;
   descriptionButton.dataset.descriptionUrl = `/ehz/files/${uuid}/description`;
-  debugger;
   descriptionButton.onclick = displayDescription; // Assigning the description function to the onclick event
   descriptionButton.classList.add("button-options");
 
@@ -238,10 +237,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  const openLinkInNewTab = (row) => {
+    const firstTd = row.querySelector("td");
+    const anchorElement = firstTd.querySelector("a");
+    if (anchorElement && anchorElement.hasAttribute("href")) {
+      const url = anchorElement.getAttribute("href");
+      window.open(url, "_blank");
+    }
+  };
+
   // Single Click leads to focus: turning blue
   const handleClick = (event) => {
     const targetRow = event.target.closest("tr");
     if (targetRow && tableContent.contains(targetRow)) {
+      // Add focus to the row
       addFocusToRow(targetRow);
     }
   };
@@ -250,7 +259,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const handleDoubleClick = (event) => {
     const targetRow = event.target.closest("tr");
     if (targetRow) {
-      openLinkInSameTab(targetRow);
+      // Find the <img> element within the clicked row and get its "alt" attribute
+      const altAttributeValue = targetRow
+        .querySelector("img")
+        .getAttribute("alt");
+
+      // Check if the "alt" attribute value indicates a directory
+      if (altAttributeValue === "Directory") {
+        openLinkInSameTab(targetRow); // If it's a directory, open the link in the same tab
+      } else if (
+        altAttributeValue === "Video" ||
+        altAttributeValue === "Audio" ||
+        altAttributeValue === "Other"
+      ) {
+        // Do nothing
+      } else {
+        openLinkInNewTab(targetRow); // If it's a file, open the link in a new tab
+      }
     }
   };
 
@@ -275,24 +300,175 @@ if (query !== null) {
     const table = document.getElementById("table-content");
     const rows = table.getElementsByTagName("tr");
 
+    //  delete duplicate strings and also remove substrings from the list
+    const uniqueQueryList = removeDuplicatesAndSubstrings(query);
+
     for (let row of rows) {
       const cells = row.getElementsByTagName("td");
-      for (let i = 0; i < cells.length - 1; i++) {
-        const cell = cells[i];
-        const cellText = cell.innerHTML;
+      // Highlight the first column
+      const firstCell = row.getElementsByClassName("file-link")[0];
 
-        // only highlight the specific query instead of the whole cell
-        if (cellText.includes(query)) {
-          const regex = new RegExp(query, "gi");
-          const highlightedText = cellText.replace(
-            regex,
-            (match) => `<mark>${match}</mark>`,
-          );
-          cell.innerHTML = highlightedText;
-        }
+      let cellText = firstCell.innerHTML; // Extract the text content and remove leading/trailing whitespace
+      const regexPattern = new RegExp(uniqueQueryList.join("|"), "gi"); // Combine all queries in uniqueQueryList into a single regex pattern
+
+      cellText = cellText.replace(
+        // Replace all occurrences of the queries with <mark> tags
+        regexPattern,
+        (match) => `<mark>${match}</mark>`,
+      );
+      firstCell.innerHTML = cellText;
+
+      // Highlight cells in columns except the first and last rows
+      for (let i = 1; i < cells.length - 1; i++) {
+        const cell = cells[i];
+        let cellText = cell.innerHTML;
+
+        const regexPattern = new RegExp(uniqueQueryList.join("|"), "gi");
+
+        cellText = cellText.replace(
+          regexPattern,
+          (match) => `<mark>${match}</mark>`,
+        );
+        cell.innerHTML = cellText;
       }
     }
   }
 
+  //  delete duplicate strings and also remove substrings from the list
+  function removeDuplicatesAndSubstrings(query) {
+    const subQueryList = query.split(/\s+/);
+
+    // Sort the list by length in descending order
+    const sortedList = subQueryList.sort((a, b) => b.length - a.length);
+
+    const uniqueList = [];
+
+    for (const str of sortedList) {
+      if (
+        !uniqueList.some((existingStr) =>
+          existingStr.toLowerCase().includes(str.toLowerCase()),
+        )
+      ) {
+        uniqueList.push(str);
+      }
+    }
+
+    return uniqueList;
+  }
+
+  // New method to handle fetch and actions related to fileParents
+  function fetchFileParents(fileUrl) {
+    // Fetch the fileParents data
+    fetch(`${fileUrl}/parents`, {
+      method: "Get",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Get the reference to the <ul> element where we'll add the file paths
+        const selectedFilePaths = document.getElementById(
+          "selected-file-paths",
+        );
+        selectedFilePaths.innerHTML = "";
+
+        // Add "Selected File: " in the front
+        const li = document.createElement("li");
+        li.textContent = "Selected File: ";
+        selectedFilePaths.appendChild(li);
+
+        // Loop through the fileParents data (List<Map<String, String>>)
+        for (const entry of data) {
+          // 'entry' is a map containing 'ancestorUUID' and 'filename' keys
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+
+          // Access the 'ancestorUUID' and 'filename' values from the map
+          const ancestorUUID = entry["ancestorUUID"];
+          const filename = entry["filename"];
+
+          // Set the href and text content using Thymeleaf expressions
+          a.setAttribute("href", `/ehz/files/${ancestorUUID}`);
+          a.textContent = filename;
+
+          li.appendChild(a);
+          selectedFilePaths.appendChild(li);
+        }
+        // Hide the current file paths
+        const currentFilePaths = document.getElementById("current-file-paths");
+        currentFilePaths.style.display = "none";
+        // Show the selected file paths
+        selectedFilePaths.style.display = "block";
+      })
+      .catch((error) => {
+        console.error("Error fetching fileParents:", error);
+      });
+  }
+
+  function handleSelectedFileClick(event) {
+    const targetRow = event.target.closest("tr");
+
+    const fileUrl = targetRow.querySelector(".file-link").getAttribute("href");
+
+    // Show the selected files' paths
+    fetchFileParents(fileUrl);
+  }
+
+  function handleUnselectedFileClick(event) {
+    const target = event.target;
+    if (!tableContent.contains(target)) {
+      const selectedFilePaths = document.getElementById("selected-file-paths");
+      const currentFilePaths = document.getElementById("current-file-paths");
+
+      //  Swap the display properties
+      selectedFilePaths.style.display = "none";
+      currentFilePaths.style.display = "block";
+    }
+  }
+
+  function handleSelectedFileHover(event) {
+    const targetRow = event.target;
+
+    const hoverFileUrl = targetRow
+      .querySelector(".file-link")
+      .getAttribute("href");
+    fetchFileParents(hoverFileUrl);
+  }
+
+  function handleUnselectedFileHover() {
+    const tableRows = tableContent.querySelectorAll("tr");
+
+    let isContainFocus = false;
+    for (const row of tableRows) {
+      if (row.classList.contains("focus")) {
+        isContainFocus = true;
+        const focusedFileUrl = row
+          .querySelector(".file-link")
+          .getAttribute("href");
+        fetchFileParents(focusedFileUrl);
+        break;
+      }
+    }
+    if (!isContainFocus) {
+      const selectedFilePaths = document.getElementById("selected-file-paths");
+      const currentFilePaths = document.getElementById("current-file-paths");
+
+      //  Swap the display properties
+      selectedFilePaths.style.display = "none";
+      currentFilePaths.style.display = "block";
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", highlightSearch);
+  document.addEventListener("DOMContentLoaded", () => {
+    tableContent.addEventListener("click", handleSelectedFileClick);
+    document.addEventListener("click", handleUnselectedFileClick);
+    tableContent.addEventListener("mouseleave", handleUnselectedFileHover);
+
+    // Get all the rows within the table
+    const rows = tableContent.getElementsByTagName("tr");
+
+    // Iterate through each row and add the Hover Event Listener
+    for (let row of rows) {
+      row.addEventListener("mouseenter", handleSelectedFileHover);
+    }
+  });
 }

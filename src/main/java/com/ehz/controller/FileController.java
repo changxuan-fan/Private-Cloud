@@ -127,7 +127,7 @@ public class FileController {
         return "preview";
 
       } else {
-        throw new AccessDeniedException("File type is not available to open");
+        return "/errors/preview-error";
       }
     }
   }
@@ -148,6 +148,28 @@ public class FileController {
 
       subFilePath = getParentString(subFilePath);
     }
+
+    return fileParents;
+  }
+
+  @GetMapping("/ehz/files/{uuidString}/parents")
+  @ResponseBody
+  public List<Map<String, String>> getFileParents(
+      @PathVariable String uuidString, Principal principal) throws AccessDeniedException {
+    SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
+
+    // Get user's permission for the uuidString
+    Permission permission = getAccessPermission(principal, subFile);
+
+    // permission cannot be None
+    if (permission == Permission.NONE) {
+      throw new AccessDeniedException(
+          "Access Denied: User doesn't have the permission to enter the url");
+    }
+
+    String subFilePath = subFile.getSubFilePath();
+
+    List<Map<String, String>> fileParents = getFileParents(subFilePath);
 
     return fileParents;
   }
@@ -364,11 +386,9 @@ public class FileController {
   }
 
   @GetMapping("/ehz/files/{uuidString}/delete")
-  public String fileDelete(
-      @PathVariable String uuidString,
-      @RequestParam("uuidOriginal") String uuidOriginal,
-      Principal principal,
-      RedirectAttributes redirectAttributes)
+  @ResponseBody
+  public boolean fileDelete(
+      @PathVariable String uuidString, Principal principal, RedirectAttributes redirectAttributes)
       throws IOException {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
@@ -385,7 +405,7 @@ public class FileController {
     // Delete files in the system
     storageService.delete(subFilePath);
 
-    return "redirect:/ehz/files/" + uuidOriginal;
+    return true;
   }
 
   @PostMapping("/ehz/files/{uuidString}/upload")
@@ -446,9 +466,9 @@ public class FileController {
 
   @Transactional
   @PostMapping("/ehz/files/{uuidString}/description")
-  public String fileDescriptionUpdate(
+  @ResponseBody
+  public boolean fileDescriptionUpdate(
       @PathVariable String uuidString,
-      @RequestParam("uuidOriginal") String uuidOriginal,
       @RequestParam("input-description") String descriptionInput,
       Principal principal,
       RedirectAttributes redirectAttributes)
@@ -464,14 +484,14 @@ public class FileController {
     }
 
     subFile.setDescription(descriptionInput);
-    return "redirect:/ehz/files/" + uuidOriginal;
+    return true;
   }
 
   @Transactional
   @PostMapping("/ehz/files/{uuidString}/author")
-  public String fileAuthorUpdate(
+  @ResponseBody
+  public boolean fileAuthorUpdate(
       @PathVariable String uuidString,
-      @RequestParam("uuidOriginal") String uuidOriginal,
       @RequestParam("input-author") String authorInput,
       Principal principal,
       RedirectAttributes redirectAttributes)
@@ -487,7 +507,7 @@ public class FileController {
     }
 
     subFile.setAuthor(authorInput);
-    return "redirect:/ehz/files/" + uuidOriginal;
+    return true;
   }
 
   @GetMapping("/ehz/files/{uuidString}/search")
@@ -507,11 +527,29 @@ public class FileController {
           "Access Denied: User doesn't have the permission to enter the url");
     }
 
-    Set<SubFile> subFileSet =
-        subFileService.fileSearch(subFile.getSubFilePath(), query, query, query);
-    SubFile root = subFileService.findBySubFilePath(rootLocation);
+    // Split the string by white space
+    String[] subQueryList = query.split("\\s+");
+    // Check for duplicate elements using Set
+    Set<String> uniqueQueryList = new HashSet<>(Arrays.asList(subQueryList));
+
+    Set<SubFile> subFileSet = new HashSet<>();
+
+    // Search files and Get Intersections
+    for (String subQuery : uniqueQueryList) {
+      Set<SubFile> subFileSetTemp =
+          subFileService.fileSearch(subFile.getSubFilePath(), subQuery, subQuery, subQuery);
+      // If intersection is empty, add all elements from the first subFileSetTemp
+      if (subFileSet.isEmpty()) {
+        subFileSet.addAll(subFileSetTemp);
+      } else {
+        // Retain only elements that are present in both 'intersection' and 'subFileSetTemp'
+        subFileSet.retainAll(subFileSetTemp);
+      }
+    }
+    List<Map<String, String>> fileParents = getFileParents(subFile.getSubFilePath());
 
     // Check if the set contains the root element, and if so, remove it
+    SubFile root = subFileService.findBySubFilePath(rootLocation);
     subFileSet.remove(root);
 
     List<Path> paths =
@@ -522,6 +560,7 @@ public class FileController {
     model.addAttribute("uuidString", uuidString);
     model.addAttribute("permission", "Download");
     model.addAttribute("query", query);
+    model.addAttribute("fileParents", fileParents);
 
     return "files";
   }

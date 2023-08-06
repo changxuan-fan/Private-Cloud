@@ -24,6 +24,7 @@ function checkDuplicates(event) {
         document.getElementById("div-upload").style.display = "block";
       } else {
         // If there are no conflicts, submit the form directly.
+
         document.getElementById("fileUploadForm").submit();
       }
     })
@@ -34,33 +35,48 @@ function checkDuplicates(event) {
     });
 }
 
-// Check if there are conflicting Folder names
-function checkDuplicateFolder() {
-  const filename = document.getElementById("filename").value;
+// Function to handle the form submission
+function handleCreateSubmit(event) {
+  event.preventDefault(); // Prevent the default form submission and page reload
 
-  // Perform AJAX request to the server to check for name duplicates
-  const formData = new FormData();
-  formData.append("files", filename);
+  const filenameInput = document.getElementById("filename");
+  const filename = filenameInput.value.trim();
 
-  // AJAX fetch: check duplicate file names
-  fetch(`/ehz/files/${uuid}/check-duplicates`, {
-    method: "POST",
-    body: formData,
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data === true) {
-        // If there is a conflict
-        document.getElementById("label-create-hidden").style.visibility =
-          "visible";
-      } else {
-        // If there are no conflicts, submit the form directly.
-        document.getElementById("form-create").submit();
-      }
+  // Define a regular expression to check for illegal characters in the file name.
+  // Modify the regex based on your target environment's restrictions.
+  const illegalCharactersRegex = /[\\/:"*?<>|]/;
+
+  if (illegalCharactersRegex.test(filename)) {
+    document.getElementById("label-create-hidden").style.visibility = "visible";
+  } else {
+    // Perform AJAX request to the server to check for name duplicates
+    const formData = new FormData();
+    formData.append("files", filename);
+
+    // AJAX fetch: check duplicate file names
+    fetch(`/ehz/files/${uuid}/check-duplicates`, {
+      method: "POST",
+      body: formData,
     })
-    .catch((error) => {
-      // Handle error during AJAX request or server-side check.
-      console.error("Error:", error);
-      // You can provide appropriate feedback to the user here.
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data === true) {
+          // If there is a conflict
+          document.getElementById("label-create-hidden").style.visibility =
+            "visible";
+        } else {
+          // If there are no conflicts, submit the form directly.
+          document.getElementById("form-create").submit();
+        }
+      })
+      .catch((error) => {
+        // Handle error during AJAX request or server-side check.
+        console.error("Error:", error);
+        // You can provide appropriate feedback to the user here.
+      });
+  }
 }
+
+// Add an event listener to the form's submit event
+const formCreate = document.getElementById("form-create");
+formCreate.addEventListener("submit", handleCreateSubmit);

@@ -17,6 +17,13 @@
     />
   </head>
   <body>
+    <div
+      class="search-results"
+      th:style="${query != null ? '' : 'display:none;'}"
+    >
+      Search Results
+    </div>
+
     <script th:inline="javascript">
       const fileList = /*[[${fileList}]]*/ "";
       const uuidString = /*[[${uuidString}]]*/ "";

@@ -13,7 +13,8 @@
 
   <body>
     <nav class="file-paths">
-      <ul>
+      <ul id="current-file-paths">
+        <li>Current File:</li>
         <!-- Loop through the entries of the fileParents Map -->
         <li th:each="entry : ${fileParents}">
           <!-- 'entry.key' represents the key of the Map, and 'entry.value' represents the value -->
@@ -22,6 +23,9 @@
             th:text="${entry.filename}"
           ></a>
         </li>
+      </ul>
+      <ul id="selected-file-paths" style="display: none">
+        <!-- File paths will be dynamically added here -->
       </ul>
     </nav>
   </body>

@@ -1,15 +1,19 @@
 package com.ehz.storage;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import javax.imageio.ImageIO;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.jodconverter.core.DocumentConverter;
 import org.jodconverter.core.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +92,65 @@ public class FileSystemStorageService implements StorageService {
               File tempFile = tempFilePathInDirectory.toFile();
               documentConverter.convert(inputStream).to(tempFile).execute();
               tempFile.createNewFile();
+            }
+          }
+
+          // Create temp file for image
+          if (contentType.equals("image/png")
+              || contentType.equals("image/jpeg")
+              || contentType.equals("image/tiff")
+              || contentType.equals("image/gif")) {
+            try (InputStream imageInputStream = file.getInputStream()) {
+
+              File tempFile = tempFilePathInDirectory.toFile();
+              PDDocument doc = new PDDocument();
+              PDPage page = new PDPage();
+              doc.addPage(page);
+
+              // Get image
+              PDImageXObject pdImage =
+                  LosslessFactory.createFromImage(doc, ImageIO.read(imageInputStream));
+
+              // Get the image's original dimensions
+              int imageWidth = pdImage.getWidth();
+              int imageHeight = pdImage.getHeight();
+
+              // Get the PDF page's dimensions
+              PDRectangle mediaBox = page.getMediaBox();
+              float pdfPageWidth = mediaBox.getWidth();
+              float pdfPageHeight = mediaBox.getHeight();
+
+              // Calculate the scale to fit the image within the PDF page
+              float widthScale = pdfPageWidth / imageWidth;
+              float heightScale = pdfPageHeight / imageHeight;
+              float scale = Math.min(widthScale, heightScale);
+
+              float newImageWidth;
+              float newImageHeight;
+
+              // Scale the image if larger than pdf page
+              if (scale < 1) {
+                // Calculate the new dimensions for the image
+                newImageWidth = imageWidth * scale;
+                newImageHeight = imageHeight * scale;
+              } else {
+                // Calculate the new dimensions for the image
+                newImageWidth = imageWidth;
+                newImageHeight = imageHeight;
+              }
+
+              //              // Calculate the positioning to center the image on the page
+              //              float xPosition = (pdfPageWidth - newImageWidth) / 2;
+              //              float yPosition = (pdfPageHeight - newImageHeight) / 2;
+
+              try (PDPageContentStream contents = new PDPageContentStream(doc, page)) {
+
+                contents.drawImage(
+                    pdImage, 0, pdfPageHeight - newImageHeight, newImageWidth, newImageHeight); // ?y's position
+              }
+
+              doc.save(tempFile);
+              doc.close();
             }
           }
         }
@@ -175,10 +238,13 @@ public class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public void create(String filePath) throws FileAlreadyExistsException {
+  public void create(String filePath) throws FileSystemException {
     File file = new File(filePath);
     if (!file.exists()) {
-      file.mkdir();
+      boolean isCreated = file.mkdir();
+      if(!isCreated) {
+        throw new FileSystemException("Illegal File Name");
+      }
     } else {
       throw new FileAlreadyExistsException("The directory has already existed");
     }

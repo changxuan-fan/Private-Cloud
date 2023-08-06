@@ -116,3 +116,8 @@ File Options
   min-height: 18px;
   width: 18px;
 }
+
+.search-results {
+  font-size: 20px;
+  padding: 10px 0 0;
+}

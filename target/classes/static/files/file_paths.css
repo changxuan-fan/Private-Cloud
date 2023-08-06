@@ -1,6 +1,6 @@
 .file-paths ul {
   list-style-type: none;
-  margin: 0;
+  margin: 15px 0 0;
   padding: 0;
   overflow: hidden;
   font-size: 20px;
@@ -27,5 +27,4 @@
 
 .file-paths li:last-child a {
   color: black;
-  pointer-events: none; /* This will make the last li not clickable */
 }
