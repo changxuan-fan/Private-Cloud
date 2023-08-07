@@ -1,0 +1,82 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link href="/buttons.css" media="all" rel="stylesheet" type="text/css" />
+    <link
+      href="/users/user_options.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <!-- Password Button-->
+    <div class="div-password" id="div-password" style="display: none">
+      <form action="#" class="form-password" id="form-password" method="post">
+        <label class="label-password" for="input-password"
+          ><b>Password</b></label
+        >
+
+        <input
+          class="input-password"
+          id="input-password"
+          maxlength="30"
+          name="input-password"
+          style="cursor: text"
+          type="text"
+        />
+
+        <div style="text-align: center">
+          <button
+            class="cancel-button"
+            onclick="document.getElementById('div-password').style.display='none'"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button class="submit-button" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Enabled Button-->
+    <div class="div-enabled" id="div-enabled" style="display: none">
+      <form action="#" class="form-enabled" id="form-enabled" th:method="GET">
+        <label class="label-enabled">Switch Enabled Status?</label>
+
+        <div style="text-align: center">
+          <button
+            class="cancel-button"
+            onclick="document.getElementById('div-enabled').style.display='none'"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button class="submit-button" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Delete Button-->
+    <div class="div-delete" id="div-delete" style="display: none">
+      <form action="#" class="form-delete" id="form-delete" th:method="GET">
+        <label class="label-delete">Delete Permanently?</label>
+
+        <div style="text-align: center">
+          <button
+            class="cancel-button"
+            onclick="document.getElementById('div-delete').style.display='none'"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button class="submit-button" type="submit">Delete</button>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>

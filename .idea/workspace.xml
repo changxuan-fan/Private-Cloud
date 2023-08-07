@@ -6,55 +6,86 @@
   <component name="ChangeListManager">
     <list default="true" id="069bf71a-79b4-44ff-8b0b-9841541df3d2" name="Changes" comment="Improve Database's Durability, Add Search Functionality">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/fc3fef18-132d-4981-86a4-f5202c238c75.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/fc3fef18-132d-4981-86a4-f5202c238c75.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/SecuringWebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/SecuringWebApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/config/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/config/WebSecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/controller/FileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/controller/FileController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/domain/CustomUserDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/domain/CustomUserDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/domain/SubFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/domain/SubFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/domain/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/domain/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/domain/UserFileMapping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/domain/UserFileMapping.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/repository/UserFileMappingRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/repository/UserFileMappingRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/repository/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/service/FileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/service/FileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/service/SubFileService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/service/SubFileService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/service/SubFileServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/service/SubFileServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserFileMappingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserFileMappingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserFileMappingServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserFileMappingServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/service/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/storage/FileSystemStorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/storage/FileSystemStorageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ehz/storage/StorageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ehz/storage/StorageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/buttons.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/buttons.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_options.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/files/file_options.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_paths.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/files/file_paths.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/public/caret-down.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_main.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_paths.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_table.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/files/file_table.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_table.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/files/file_table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/files/file_upload_create.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/files/file_upload_create.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/static/fragments/navbar.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/fragments/navbar.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/file_search/file_search_main.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/file_search/file_search_options.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/file_search/file_search_table.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/fragments/navbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/fragments/sidebar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/preview.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/errors/preview-error.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/errors/preview-error.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/file_search.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/files.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/files.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/files/file_main.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/files/file_main.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/files/file_options.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/files/file_options.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/files/file_paths.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/files/file_paths.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/files/file_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/files/file_table.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/files/file_upload_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/files/file_upload_create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/sidebar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/sign_out.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/sign_out.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/navbar_file.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/sidebar_files.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/sign_out.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/templates/preview.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/preview.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/ehz/securingweb/DaoTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/ehz/securingweb/DaoTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/SecuringWebApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/SecuringWebApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/config/WebSecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/config/WebSecurityConfig.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/controller/FileController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/controller/FileController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/domain/CustomUserDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/domain/CustomUserDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/domain/SubFile.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/domain/SubFile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/domain/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/domain/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/domain/UserFileMapping.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/domain/UserFileMapping.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/repository/UserFileMappingRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/repository/UserFileMappingRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/service/FileServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/service/FileServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/service/SubFileService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/service/SubFileService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/service/SubFileServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/service/SubFileServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/service/UserFileMappingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/service/UserFileMappingService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/service/UserFileMappingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/service/UserFileMappingServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/service/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/service/UserServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/storage/FileSystemStorageService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/storage/FileSystemStorageService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/ehz/storage/StorageService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/ehz/storage/StorageService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/buttons.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/buttons.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_options.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/files/file_options.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_paths.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/files/file_paths.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_main.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_main.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_paths.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_table.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/files/file_table.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_table.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/files/file_table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/static/files/file_upload_create.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/files/file_upload_create.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/static/fragments/navbar.css" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/fragments/navbar.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/file_search/file_search_main.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/file_search/file_search_options.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/file_search/file_search_table.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/fragments/navbar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/fragments/sidebar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/style.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/errors/preview-error.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/errors/preview-error.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/file_search.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/files.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/files.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/templates/files/file_main.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/files/file_main.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/templates/files/file_options.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/files/file_options.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/files/file_paths.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/files/file_paths.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/templates/files/file_table.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/files/file_table.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/templates/files/file_upload_create.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/files/file_upload_create.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/fragments/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/fragments/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/fragments/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/fragments/sidebar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/templates/fragments/sign_out.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/fragments/sign_out.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/fragments/navbar.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/fragments/sidebar.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/templates/fragments/sign_out.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/templates/preview.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/templates/preview.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/ehz_3-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/ehz_3-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/com/ehz/securingweb/DaoTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/ehz/securingweb/DaoTests.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,11 +95,12 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Kotlin Class" />
         <option value="Class" />
-        <option value="HTML File" />
+        <option value="thymeleaf" />
         <option value="CSS File" />
         <option value="JavaScript File" />
-        <option value="thymeleaf" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -103,38 +135,38 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/Desktop/ehz_3/src/main/resources/templates/file_search&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;C:\\Users\\Admin\\AppData\\Roaming\\npm\\node_modules\\prettier&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
-    &quot;spring.configuration.checksum&quot;: &quot;ff55ad166dc50072936255199fa7e180&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "TODO_SCOPE": "All Places",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/Admin/Desktop/ehz_3/src/main/resources/templates/file_search",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Admin\\AppData\\Roaming\\npm\\node_modules\\prettier",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "spring.configuration.checksum": "ff55ad166dc50072936255199fa7e180",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources\templates\file_search" />
@@ -142,10 +174,10 @@
       <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources\static" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources\static" />
+      <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources" />
       <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources\static\files" />
       <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources\templates\files" />
-      <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources" />
-      <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources\static" />
       <recent name="C:\Users\Admin\Desktop\ehz_3\src\main\resources\templates\fragments" />
     </key>
   </component>
@@ -210,6 +242,9 @@
     </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="069bf71a-79b4-44ff-8b0b-9841541df3d2" name="Changes" comment="" />
@@ -257,6 +292,8 @@
       <workItem from="1691024362963" duration="37960000" />
       <workItem from="1691110505827" duration="24232000" />
       <workItem from="1691288460935" duration="3287000" />
+      <workItem from="1691370077072" duration="31408000" />
+      <workItem from="1691406704959" duration="258000" />
     </task>
     <task id="LOCAL-00001" summary="Second version: Converting file types right after being uploaded">
       <created>1689651176220</created>

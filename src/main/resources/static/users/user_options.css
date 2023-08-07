@@ -1,0 +1,94 @@
+/*
+Common Attribute of Options' buttons
+*/
+/* The blocked grey entire screen's background after clicking the button */
+.div-password,
+.div-delete,
+.div-enabled {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black background */
+}
+
+.form-password,
+.form-delete,
+.form-enabled {
+  background-color: #fefefe;
+  margin: auto;
+  border: 1px solid #888;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/*
+Password Button
+*/
+.form-password {
+  width: 300px;
+  height: 160px;
+}
+
+.label-password {
+  font-size: 26px;
+  text-align: left;
+  display: block;
+}
+
+/* The text for password */
+.input-password {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 20px 0 20px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+/*
+Enabled Button
+*/
+
+/* Enabled form in the center of the screen*/
+.form-enabled {
+  width: 300px;
+  height: 130px;
+}
+
+/* Alert label of enabled */
+.label-enabled {
+  font-size: 26px;
+  text-align: center;
+  display: block;
+  padding-bottom: 30px;
+}
+
+/*
+Delete Button
+*/
+
+/* Delete form in the center of the screen*/
+.form-delete {
+  width: 300px;
+  height: 130px;
+}
+
+/* Alert label of deleting */
+.label-delete {
+  font-size: 26px;
+  text-align: center;
+  display: block;
+  padding-bottom: 30px;
+}

@@ -2,7 +2,6 @@ package com.ehz.service;
 
 import com.ehz.domain.File;
 import com.ehz.domain.SubFile;
-import com.ehz.domain.User;
 import java.util.Set;
 import java.util.UUID;
 
@@ -13,7 +12,7 @@ public interface SubFileService {
       String fileType,
       String fileSize,
       boolean isDirectory,
-      User uploadUser);
+      String uploadUser);
 
   SubFile findById(UUID uuid);
 

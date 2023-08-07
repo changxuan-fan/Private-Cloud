@@ -33,11 +33,11 @@ Table Styles
   width: 100%;
 }
 
-.file-table th button:not(#Options) {
+.file-table th button:not(#options) {
   cursor: pointer;
 }
 
-#Options {
+#options {
   font-size: 0;
   color: transparent;
 }

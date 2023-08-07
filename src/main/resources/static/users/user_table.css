@@ -1,0 +1,78 @@
+/*
+Table Styles
+*/
+.user-table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+
+/* Table cells and headers */
+.user-table td,
+.user-table th {
+  padding: 10px 0;
+  text-align: left;
+  border: none; /* Remove unnecessary borders to create a cleaner table */
+  border-bottom: 1px solid #ddd; /* Add border bottom instead of using border-bottom-style */
+}
+
+/* Add some spacing to the first column of the table */
+.user-table td:first-child {
+  padding-left: 16px;
+}
+
+/* Table header buttons for sorting */
+.user-table th button {
+  background-color: white;
+  border: none;
+  display: block;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+#realName,
+#username {
+  cursor: pointer;
+}
+
+#options {
+  font-size: 0;
+  color: transparent;
+}
+
+.user-table th button::after {
+  padding: 12px;
+}
+
+/*
+Table Body Styles
+*
+/* Apply background color on hover for all tr elements except the header and those with the class "focus" */
+.table-content tr:hover {
+  background-color: #f2f2f2;
+}
+
+/*
+user Options
+*/
+
+.button-options {
+  background-color: white;
+  padding: 5px 7px;
+  margin-right: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.button-options:hover {
+  opacity: 0.8;
+}
+
+.svg-options {
+  min-height: 18px;
+  width: 18px;
+}

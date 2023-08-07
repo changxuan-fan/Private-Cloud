@@ -15,19 +15,19 @@ public class DaoTests {
 
   @Test
   public void DaoTest() throws IOException {
-//
-//    roleService.createRole("ADMIN");
-//    roleService.createRole("USER");
+    //
+    //    roleService.createRole("ADMIN");
+    //    roleService.createRole("USER");
 
-//    permissionService.createPermission("None");
-//    permissionService.createPermission("Display");
-//    permissionService.createPermission("Download");
-//    permissionService.createPermission("Modify");
-
-    fileService.createRoot();
-    userService.createUser("kevin", "{noop}140", "Kevin", "ADMIN");
-
-    userService.createUser("jack", "{noop}140", "Jack", "USER");
+    //    permissionService.createPermission("None");
+    //    permissionService.createPermission("Display");
+    //    permissionService.createPermission("Download");
+    //    permissionService.createPermission("Modify");
+    //
+    //    fileService.createRoot();
+    //    userService.createUser("kevin", "{noop}140", "Kevin", "ADMIN");
+    //
+    //    userService.createUser("jack", "{noop}140", "Jack", "USER");
 
     //        fileService.createFile("root", "school");
     //        fileService.createFile("root", "home");

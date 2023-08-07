@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <head>
+    <title>Navbar Admin</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link
+      href="/fragments/navbar.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+      <!-- Logo-->
+      <div class="navbar-logo">EHZ</div>
+
+      <!--Sign Out-->
+      <div class="logout">
+        <form method="post" th:action="@{/logout}">
+          <button class="cancel-button" type="submit">Sign Out</button>
+        </form>
+      </div>
+
+      <!-- User name-->
+      <div class="username">
+        <h1 th:inline="text">
+          Hello <span sec:authentication="name" th:remove="tag"></span>!
+        </h1>
+      </div>
+    </nav>
+  </body>
+</html>

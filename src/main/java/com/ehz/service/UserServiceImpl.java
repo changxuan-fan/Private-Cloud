@@ -30,10 +30,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Transactional
-  public void createUser(String username, String password, String realName, String roleName) {
+  public void createUser(
+      String username, String password, String realName, String roleName, boolean isEnabled) {
     // Retrieve the role from the role repository
 
-      Role role = Role.valueOf(roleName);
+    Role role = Role.valueOf(roleName);
 
     // Create and save the user object
     User user = new User();
@@ -41,6 +42,7 @@ public class UserServiceImpl implements UserService {
     user.setRealName(realName);
     user.setPassword(password);
     user.setRole(role);
+    user.setEnabled(isEnabled);
     User savedUser = userRepository.save(user);
 
     // Get permission
@@ -86,23 +88,24 @@ public class UserServiceImpl implements UserService {
   }
 
   @Transactional
-  public void deleteUser(String username) {
-    User user =
-        userRepository
-            .findByUsername(username)
-            .orElseThrow(
-                () -> new EntityNotFoundException("User not found with username: " + username));
-
-    // Disconnect the user from all files
-    List<UserFileMapping> userFileMappings = user.getUserFileMappings();
-    userFileMappingRepository.deleteAll(userFileMappings);
-
-    userRepository.delete(user);
+  public void deleteByUserId(Long userId) {
+    userRepository.deleteByUserId(userId);
   }
 
   public User findByUsername(String username) {
     return userRepository
         .findByUsername(username)
         .orElseThrow(() -> new EntityNotFoundException("User not exists"));
+  }
+
+  public List<User> getAllUsers() {
+    return userRepository.findAll();
+  }
+
+  @Override
+  public User findById(Long id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("User not present"));
   }
 }

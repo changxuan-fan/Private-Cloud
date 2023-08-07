@@ -45,7 +45,7 @@ public class FileServiceImpl implements FileService {
 
   @Transactional
   public void createRoot() {
-    if(!fileRepository.existsByFilePath(rootLocation)) {
+    if (!fileRepository.existsByFilePath(rootLocation)) {
       File file = new File();
       file.setFilePath(rootLocation);
       File savedFile = fileRepository.save(file);
@@ -85,11 +85,10 @@ public class FileServiceImpl implements FileService {
     newSubFile.setSubFilePath(savedFile.getFilePath());
     newSubFile.setIsDirectory(true);
     newSubFile.setFileType("Other");
-    newSubFile.setUploadUser(uploadUser);
+    newSubFile.setUploadUser(uploadUser.getRealName());
     newSubFile.setUploadDate(uploadDate);
     newSubFile.setFilename(filename);
     subFileRepository.save(newSubFile);
-
 
     // Save all UserFileMapping objects in bulk
     Permission permissionDisplay = Permission.DISPLAY;
@@ -122,7 +121,6 @@ public class FileServiceImpl implements FileService {
     File file = subFile.getFile();
     String filePath = file.getFilePath();
 
-
     // Delete the entry in File
     if (subFilePath.equals(filePath)) {
 
@@ -150,7 +148,6 @@ public class FileServiceImpl implements FileService {
   public boolean existsByFilePath(String subFilePath) {
     return fileRepository.existsByFilePath(subFilePath);
   }
-
 
   public File findByFilePath(String filePath) {
     return fileRepository

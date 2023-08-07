@@ -41,9 +41,8 @@ public class SubFile implements Serializable {
   @Column(nullable = false)
   private String author = " — ";
 
-  @ManyToOne
-  @JoinColumn(name = "upload_user_id")
-  private User uploadUser;
+  @Column(nullable = false)
+  private String uploadUser = " — ";
 
   @ManyToOne
   @JoinColumn(name = "file_id")

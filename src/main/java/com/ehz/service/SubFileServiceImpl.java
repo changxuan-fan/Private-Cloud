@@ -2,7 +2,6 @@ package com.ehz.service;
 
 import com.ehz.domain.File;
 import com.ehz.domain.SubFile;
-import com.ehz.domain.User;
 import com.ehz.repository.FileRepository;
 import com.ehz.repository.SubFileRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -59,7 +58,7 @@ public class SubFileServiceImpl implements SubFileService {
       String fileType,
       String fileSize,
       boolean isDirectory,
-      User uploadUser) {
+      String uploadUser) {
 
     // Find the root File with the longest file path length
     List<File> fileList = fileRepository.findAll();
@@ -68,7 +67,6 @@ public class SubFileServiceImpl implements SubFileService {
             .filter(file -> subFilePath.startsWith(file.getFilePath()))
             .max(Comparator.comparingInt(file -> file.getFilePath().length()));
     File longestFile = longestFilePath.orElse(null);
-
 
     // Create the subFile
     if (longestFile != null) {
@@ -121,16 +119,15 @@ public class SubFileServiceImpl implements SubFileService {
     return subFileRepository.existsBySubFilePath(subFilePath);
   }
 
-  public Set<SubFile> fileSearch(String subFilePath, String description, String author, String filename) {
+  public Set<SubFile> fileSearch(
+      String subFilePath, String description, String author, String filename) {
     return subFileRepository.fileSearch(subFilePath, description, author, filename);
   }
 
   @Transactional
   public void deleteBySubFilePath(String subFilePath) {
-     subFileRepository.deleteBySubFilePath(subFilePath);
+    subFileRepository.deleteBySubFilePath(subFilePath);
     // Delete files inside if it is directory
     subFileRepository.deleteBySubFilePathStartingWith(subFilePath);
-
   }
-
 }

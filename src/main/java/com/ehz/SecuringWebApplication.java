@@ -16,18 +16,21 @@ public class SecuringWebApplication {
 
   public static void main(String[] args) throws Throwable {
     SpringApplication.run(SecuringWebApplication.class, args);
-
-
   }
 
   @Bean
-  CommandLineRunner init(StorageService storageService,  FileService fileService, UserService userService) {
+  CommandLineRunner init(
+      StorageService storageService, FileService fileService, UserService userService) {
     return (args) -> {
-//      storageService.init();
-//      fileService.createRoot();
-//      userService.createUser("kevin", "{noop}140", "Kevin", "ADMIN");
-//
-//      userService.createUser("jack", "{noop}140", "Jack", "USER");
+      //            storageService.init();
+      //            fileService.createRoot();
+      //            userService.createUser("kevin", "{noop}140", "Kevin", "ADMIN", true);
+      //
+      //            userService.createUser("jack", "{noop}140", "Jack", "USER", true);
+      //            userService.createUser("mack", "{noop}140", "Jack", "USER", true);
+      //            userService.createUser("tom", "{noop}140", "Jack", "USER", true);
+      //            userService.createUser("tim", "{noop}140", "Jack", "USER", true);
+      //            userService.createUser("lucy", "{noop}140", "Jack", "USER", true);
     };
   }
 }

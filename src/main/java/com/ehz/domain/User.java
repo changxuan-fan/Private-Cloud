@@ -32,4 +32,6 @@ public class User implements Serializable {
   @Enumerated(EnumType.STRING)
   @Column(name = "role", nullable = false)
   private Role role;
+
+  private boolean isEnabled = true;
 }

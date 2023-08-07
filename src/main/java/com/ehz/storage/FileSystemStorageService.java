@@ -146,7 +146,11 @@ public class FileSystemStorageService implements StorageService {
               try (PDPageContentStream contents = new PDPageContentStream(doc, page)) {
 
                 contents.drawImage(
-                    pdImage, 0, pdfPageHeight - newImageHeight, newImageWidth, newImageHeight); // ?y's position
+                    pdImage,
+                    0,
+                    pdfPageHeight - newImageHeight,
+                    newImageWidth,
+                    newImageHeight); // ?y's position
               }
 
               doc.save(tempFile);
@@ -242,7 +246,7 @@ public class FileSystemStorageService implements StorageService {
     File file = new File(filePath);
     if (!file.exists()) {
       boolean isCreated = file.mkdir();
-      if(!isCreated) {
+      if (!isCreated) {
         throw new FileSystemException("Illegal File Name");
       }
     } else {

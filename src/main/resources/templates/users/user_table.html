@@ -1,0 +1,87 @@
+<!doctype html>
+
+<html
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link
+      href="/users/user_table.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <div>
+      <table class="user-table" id="user-table">
+        <thead>
+          <tr>
+            <th>
+              <button id="realName" onclick="sortTable(0)">Real Name</button>
+            </th>
+            <th>
+              <button id="username" onclick="sortTable(1)">Username</button>
+            </th>
+            <th>
+              <button id="isEnabled">isEnabled</button>
+            </th>
+            <th>
+              <button id="options">Options</button>
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="table-content">
+          <!-- Loop through the list of users -->
+          <tr th:each="user : ${users}">
+            <td th:text="${user.realName}"></td>
+            <td th:text="${user.username}"></td>
+            <td
+              th:style="${'color:' + (user.isEnabled ? 'black' : 'red')}"
+              th:text="${user.isEnabled} ? '&#10004;' : '&#10006;'"
+            ></td>
+            <!-- Three User Option Buttons-->
+            <td>
+              <div style="display: flex">
+                <button
+                  class="button-options password"
+                  th:data-password="${user.password}"
+                  th:data-password-url="${'/ehz/admin/users/' + user.userId + '/password'}"
+                >
+                  <img alt="Password" class="svg-options" src="/password.svg" />
+                </button>
+
+                <!--Hide the Enabled button if it is the current name-->
+                <button
+                  class="button-options enabled"
+                  th:unless="${user.username == #authentication.name}"
+                  th:value="${'/ehz/admin/users/' + user.userId + (user.isEnabled ? '/disable' : '/enable')}"
+                >
+                  <img alt="Enabled" class="svg-options" src="/enabled.svg" />
+                </button>
+
+                <!--Hide the delete button if it is the current name-->
+                <button
+                  class="button-options delete"
+                  th:unless="${user.username == #authentication.name}"
+                  th:value="${'/ehz/admin/users/' + user.userId + '/delete'}"
+                >
+                  <img alt="Delete" class="svg-options" src="/delete.svg" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div th:replace="~{/users/user_options}"></div>
+
+    <script src="/users/user_options.js"></script>
+    <script src="/users/user_table.js"></script>
+  </body>
+</html>

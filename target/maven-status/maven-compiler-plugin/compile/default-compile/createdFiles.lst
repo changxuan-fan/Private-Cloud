@@ -12,6 +12,7 @@ com\ehz\domain\File.class
 com\ehz\service\SubFileService.class
 com\ehz\service\UserDetailsServiceImpl.class
 com\ehz\storage\StorageService.class
+com\ehz\controller\UserController.class
 com\ehz\repository\SubFileRepository.class
 com\ehz\storage\StorageProperties.class
 com\ehz\SecuringWebApplication.class

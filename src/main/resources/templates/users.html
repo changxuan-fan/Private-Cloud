@@ -1,0 +1,21 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <!--        <link rel="stylesheet" type="text/css" media="all"-->
+    <!--              href="" th:href=""/>-->
+  </head>
+
+  <body style="margin: 0">
+    <!-- Include the navigation fragment -->
+    <div th:replace="~{fragments/navbar_admin}"></div>
+
+    <!-- Include the sidebar fragment -->
+    <div th:replace="~{/fragments/sidebar_users}"></div>
+
+    <!-- Include the main content fragment -->
+    <div th:replace="~{/users/user_main}"></div>
+  </body>
+</html>

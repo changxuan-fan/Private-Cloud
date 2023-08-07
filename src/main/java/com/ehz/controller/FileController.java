@@ -255,8 +255,7 @@ public class FileController {
       // Fetch the file from the database and check the permission
       SubFile subFile = subFileService.findBySubFilePath(subFilePath);
       Permission permission = getAccessPermission(principal, subFile);
-      User uploadUser = subFile.getUploadUser();
-      String uploadUserRealName = (uploadUser != null) ? uploadUser.getRealName() : "";
+      String uploadUser = subFile.getUploadUser();
 
       if (permission != Permission.NONE) {
         // Add file attributes to the fileList
@@ -266,7 +265,7 @@ public class FileController {
         fileAttributes.put("uuid", subFile.getSubFileId().toString());
         fileAttributes.put("isDirectory", String.valueOf(subFile.getIsDirectory()));
         fileAttributes.put("uploadDate", subFile.getUploadDate());
-        fileAttributes.put("uploadUser", uploadUserRealName);
+        fileAttributes.put("uploadUser", uploadUser);
         fileAttributes.put("fileSize", subFile.getFileSize());
         fileAttributes.put("fileType", subFile.getFileType());
         fileAttributes.put("permission", permission.toString());
@@ -366,7 +365,8 @@ public class FileController {
         || Paths.get(subFilePath).getParent().toString().equals(rootLocation)) {
       fileService.createFile(subFilePath, filename, currentUser);
     } else {
-      subFileService.createSubFile(subFilePath, filename, "Other", " — ", true, currentUser);
+      subFileService.createSubFile(
+          subFilePath, filename, "Other", " — ", true, currentUser.getRealName());
     }
 
     return "redirect:/ehz/files/" + uuidString;
@@ -455,7 +455,7 @@ public class FileController {
           multipartFile.getContentType(),
           FileUtils.byteCountToDisplaySize(multipartFile.getSize()),
           false,
-          currentUser);
+          currentUser.getRealName());
     }
 
     redirectAttributes.addFlashAttribute(
