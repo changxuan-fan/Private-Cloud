@@ -1,0 +1,16 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link href="/main.css" media="all" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <div class="main" style="display: flex">
+      <div th:replace="~{permissions/permission_user_table}"></div>
+      <div th:replace="~{permissions/permission_file_table}"></div>
+    </div>
+  </body>
+</html>

@@ -12,5 +12,7 @@ public interface UserFileMappingRepository extends JpaRepository<UserFileMapping
 
   List<UserFileMapping> findAllByUser(User user);
 
-  void deleteByUser(User user);
+  void deleteAllByUser(User user);
+
+  void deleteByUserAndFile(User user, File file);
 }

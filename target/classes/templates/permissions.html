@@ -1,0 +1,21 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link href="/buttons.css" media="all" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body style="margin: 0">
+    <!-- Include the navigation fragment -->
+    <div th:replace="~{fragments/navbar_admin}"></div>
+
+    <!-- Include the sidebar fragment -->
+    <div th:replace="~{/fragments/sidebar}"></div>
+
+    <div th:replace="~{/permissions/permission_main}"></div>
+
+    <div></div>
+  </body>
+</html>

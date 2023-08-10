@@ -1,0 +1,38 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link
+      href="/permissions/permission_tables.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <table class="permission-tables" id="permission-user-table">
+      <colgroup>
+        <col style="min-width: 250px" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>
+            <button id="realName" onclick="sortTable(0)">Real Name</button>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody class="table-content">
+        <!-- Loop through the list of users -->
+        <tr th:each="user : ${users}" th:value="${user.userId}">
+          <td th:text="${user.realName + '  <' + user.username + '>'}"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script src="/permissions/permission_user_table.js"></script>
+  </body>
+</html>

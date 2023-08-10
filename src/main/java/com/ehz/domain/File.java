@@ -3,15 +3,12 @@ package com.ehz.domain;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 public class File implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,6 +16,8 @@ public class File implements Serializable {
 
   @Column(nullable = false, unique = true, length = 1000)
   private String filePath;
+
+  private String filename;
 
   @OneToMany(mappedBy = "file")
   private List<UserFileMapping> userFileMappings;

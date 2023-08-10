@@ -1,0 +1,93 @@
+/*
+Table Styles
+*/
+.permission-tables {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  overflow-wrap: break-word;
+  margin: 10px;
+  display: block;
+}
+
+/* Table cells and headers */
+.permission-tables td,
+.permission-tables th {
+  padding: 10px;
+  text-align: left;
+  border: none; /* Remove unnecessary borders to create a cleaner table */
+}
+
+#permission-user-table {
+  display: block;
+}
+
+#permission-file-table {
+  min-width: 400px;
+}
+
+/* Table header buttons for sorting */
+.permission-tables th button {
+  background-color: white;
+  font-size: inherit;
+  font-weight: inherit;
+  border: none;
+  display: block;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+}
+
+#realName {
+  cursor: pointer;
+}
+
+.permission-tables th button::after {
+  padding: 12px;
+}
+
+#permission-user-table .focus {
+  background-color: #c2e7ff;
+}
+
+/*
+Table Body Styles
+*
+/* Apply background color on hover for all tr elements except the header and those with the class "focus" */
+.table-content tr:hover {
+  background-color: #f2f2f2;
+}
+
+/*
+Permission Button Style
+*/
+
+.permission-button-container {
+  display: flex;
+  gap: 10px;
+}
+
+.permission-button {
+  padding: 10px 20px;
+  background-color: #ccc; /* Default grey color */
+  color: #333; /* Dark text color */
+  border: none;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    transform 0.2s;
+}
+
+.permission-button:hover {
+  background-color: #aaa; /* Lighter grey color on hover */
+}
+
+.permission-button.clicked {
+  background-color: #e74c3c; /* Red color when clicked */
+  color: white; /* White text color when clicked */
+  transform: scale(1.1);
+}

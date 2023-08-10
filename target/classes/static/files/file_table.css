@@ -6,12 +6,13 @@ Table Styles
   border-collapse: collapse;
   width: 100%;
   table-layout: fixed;
+  overflow-wrap: break-word;
 }
 
 /* Table cells and headers */
 .file-table td,
 .file-table th {
-  padding: 10px 0;
+  padding: 10px 10px 10px 0;
   text-align: left;
   border: none; /* Remove unnecessary borders to create a cleaner table */
   border-bottom: 1px solid #ddd; /* Add border bottom instead of using border-bottom-style */

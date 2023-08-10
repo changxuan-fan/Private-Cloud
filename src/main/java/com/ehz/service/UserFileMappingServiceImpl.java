@@ -28,7 +28,23 @@ public class UserFileMappingServiceImpl implements UserFileMappingService {
     return userFileMappingRepository.findAllByUser(user);
   }
 
-  public void deleteByUser(User user) {
-    userFileMappingRepository.deleteByUser(user);
+  @Override
+  public List<UserFileMapping> findAll() {
+    return userFileMappingRepository.findAll();
+  }
+
+  @Override
+  public void deleteAllByUser(User user) {
+    userFileMappingRepository.deleteAllByUser(user);
+  }
+
+  @Override
+  public void deleteByUserAndFile(User user, File file) {
+    userFileMappingRepository.deleteByUserAndFile(user, file);
+  }
+
+  @Override
+  public UserFileMapping save(UserFileMapping userFileMapping) {
+    return userFileMappingRepository.save(userFileMapping);
   }
 }

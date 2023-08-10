@@ -2,13 +2,12 @@ package com.ehz.domain;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @IdClass(UF.class)

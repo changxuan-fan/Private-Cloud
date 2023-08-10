@@ -10,5 +10,11 @@ public interface UserFileMappingService {
 
   List<UserFileMapping> findAllByUser(User user);
 
-  void deleteByUser(User user);
+  List<UserFileMapping> findAll();
+
+  void deleteAllByUser(User user);
+
+  void deleteByUserAndFile(User user, File file);
+
+  UserFileMapping save(UserFileMapping userFileMapping);
 }

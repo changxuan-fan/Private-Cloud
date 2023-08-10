@@ -20,7 +20,7 @@ public class UserController {
     this.userFileMappingService = userFileMappingService;
   }
 
-  @GetMapping({"/ehz/admin", "/users", "/admin"})
+  @GetMapping({"/ehz/admin", "/users", "/admin", "/ehz/users"})
   public String admin() {
     return "redirect:/ehz/admin/users";
   }
@@ -52,7 +52,7 @@ public class UserController {
 
     User user = userService.findById(Long.valueOf(userId));
     // Delete all userFileMapping
-    userFileMappingService.deleteByUser(user);
+    userFileMappingService.deleteAllByUser(user);
 
     userService.deleteByUserId(Long.valueOf(userId));
     return true;

@@ -98,14 +98,19 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new EntityNotFoundException("User not exists"));
   }
 
+  @Override
+  public List<User> findAllByRole(Role role) {
+    return userRepository.findAllByRole(role);
+  }
+
   public List<User> getAllUsers() {
     return userRepository.findAll();
   }
 
   @Override
-  public User findById(Long id) {
+  public User findById(Long userId) {
     return userRepository
-        .findById(id)
+        .findById(userId)
         .orElseThrow(() -> new EntityNotFoundException("User not present"));
   }
 }

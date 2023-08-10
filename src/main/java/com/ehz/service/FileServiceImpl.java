@@ -48,6 +48,7 @@ public class FileServiceImpl implements FileService {
     if (!fileRepository.existsByFilePath(rootLocation)) {
       File file = new File();
       file.setFilePath(rootLocation);
+      file.setFilename(rootLocation);
       File savedFile = fileRepository.save(file);
 
       String uploadDate = getUploadDate();
@@ -75,6 +76,7 @@ public class FileServiceImpl implements FileService {
 
     File file = new File();
     file.setFilePath(newFilePath);
+    file.setFilename(filename);
     File savedFile = fileRepository.save(file);
 
     String uploadDate = getUploadDate();
@@ -153,5 +155,17 @@ public class FileServiceImpl implements FileService {
     return fileRepository
         .findByFilePath(filePath)
         .orElseThrow(() -> new EntityNotFoundException("File path not exists"));
+  }
+
+  @Override
+  public File findById(Long fileId) {
+    return fileRepository
+        .findById(fileId)
+        .orElseThrow(() -> new EntityNotFoundException("File Id not exists"));
+  }
+
+  @Override
+  public List<File> findAll() {
+    return fileRepository.findAll();
   }
 }

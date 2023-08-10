@@ -4,6 +4,7 @@ import com.ehz.domain.File;
 import com.ehz.domain.SubFile;
 import com.ehz.domain.User;
 import java.io.IOException;
+import java.util.List;
 
 public interface FileService {
   void createFile(String subFilePath, String filename, User uploadUser) throws IOException;
@@ -17,4 +18,8 @@ public interface FileService {
   boolean existsByFilePath(String subFilePath);
 
   File findByFilePath(String filePath);
+
+  File findById(Long fileId);
+
+  List<File> findAll();
 }

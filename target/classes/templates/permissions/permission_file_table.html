@@ -1,0 +1,56 @@
+<!doctype html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title></title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <link
+      href="/permissions/permission_tables.css"
+      media="all"
+      rel="stylesheet"
+      type="text/css"
+    />
+  </head>
+
+  <body>
+    <table class="permission-tables" id="permission-file-table">
+      <colgroup>
+        <col style="min-width: 250px; width: 350px" />
+        <col style="width: 300px" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th>Files</th>
+
+          <th>Permissions</th>
+        </tr>
+      </thead>
+
+      <tbody class="table-content" th:each="file : ${fileTree}">
+        <tr>
+          <td th:text="${'&#9660; ' + file.filename}"></td>
+          <td>
+            <div class="permission-button-container" th:value="${file.fileId}">
+              <button class="permission-button">NONE</button>
+              <button class="permission-button">DISPLAY</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr th:each="child : ${file.children}">
+          <td style="padding-left: 70px" th:text="${child.filename}"></td>
+          <td>
+            <div class="permission-button-container" th:value="${child.fileId}">
+              <button class="permission-button">NONE</button>
+              <button class="permission-button">DISPLAY</button>
+              <button class="permission-button">DOWNLOAD</button>
+              <button class="permission-button">MODIFY</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <script src="/permissions/permission_file_table.js"></script>
+  </body>
+</html>

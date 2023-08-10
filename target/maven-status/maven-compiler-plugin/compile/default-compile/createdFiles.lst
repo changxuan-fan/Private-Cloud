@@ -16,6 +16,7 @@ com\ehz\controller\UserController.class
 com\ehz\repository\SubFileRepository.class
 com\ehz\storage\StorageProperties.class
 com\ehz\SecuringWebApplication.class
+com\ehz\controller\PermissionController.class
 com\ehz\repository\UserRepository.class
 com\ehz\repository\FileRepository.class
 com\ehz\service\FileService.class
