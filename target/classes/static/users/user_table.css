@@ -7,6 +7,7 @@ Table Styles
   width: 100%;
   table-layout: fixed;
   overflow-wrap: break-word;
+  margin-top: 15px;
 }
 
 /* Table cells and headers */
@@ -34,8 +35,7 @@ Table Styles
   width: 100%;
 }
 
-#realName,
-#username {
+.user-table th button:not(#options) {
   cursor: pointer;
 }
 

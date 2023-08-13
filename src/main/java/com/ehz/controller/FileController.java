@@ -341,8 +341,9 @@ public class FileController {
       throw new AccessDeniedException("Access Denied: User doesn't have the permission to create");
     }
 
+    String filenameTrimmed = filename.trim();
     String subFilePath = subFile.getSubFilePath();
-    String filePath = subFilePath + "/" + filename;
+    String filePath = subFilePath + "/" + filenameTrimmed;
 
     // Create the file in the system
     storageService.create(filePath);
@@ -363,10 +364,10 @@ public class FileController {
 
     if (subFilePath.equals(rootLocation)
         || Paths.get(subFilePath).getParent().toString().equals(rootLocation)) {
-      fileService.createFile(subFilePath, filename, currentUser);
+      fileService.createFile(subFilePath, filenameTrimmed, currentUser);
     } else {
       subFileService.createSubFile(
-          subFilePath, filename, "Other", " — ", true, currentUser.getRealName());
+          subFilePath, filenameTrimmed, "Other", " — ", true, currentUser.getRealName());
     }
 
     return "redirect:/ehz/files/" + uuidString;

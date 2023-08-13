@@ -1,0 +1,57 @@
+/* The blocked grey entire screen's background after clicking the button */
+.div-create {
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent black background */
+}
+
+/*
+Create Button
+*/
+.form-create {
+  background-color: #fefefe;
+  margin: auto;
+  border: 1px solid #888;
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.4);
+  width: 300px;
+  height: 360px;
+}
+
+.label-create-hidden {
+  padding-top: 5px;
+  padding-left: 5px;
+  display: block;
+  color: red;
+  font-size: 15px;
+}
+
+/* Alert label of deleting */
+.label-create {
+  font-size: 26px;
+  text-align: left;
+  display: block;
+}
+
+/* The text for username */
+.input-create {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 0 0 10px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-size: 16px;
+}

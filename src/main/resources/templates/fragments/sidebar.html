@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
   <head>
     <meta charset="UTF-8" />
     <title>Sidebar Files</title>
@@ -13,12 +13,11 @@
 
   <body>
     <!-- Sidebar -->
-    <nav class="sidebar">
+    <nav class="sidebar" sec:authorize="hasAuthority('ADMIN')">
       <ul>
         <li><a href="/ehz/files">Home</a></li>
         <li><a href="/ehz/admin/users">Users</a></li>
         <li><a href="/ehz/admin/permissions">Permissions</a></li>
-        <li><a href="/ehz/admin/signup">Sign up</a></li>
       </ul>
     </nav>
 

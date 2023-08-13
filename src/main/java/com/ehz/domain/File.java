@@ -9,6 +9,8 @@ import lombok.*;
 @Table
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class File implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

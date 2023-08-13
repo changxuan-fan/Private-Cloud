@@ -17,4 +17,9 @@ public interface UserService {
   List<User> getAllUsers();
 
   User findById(Long userId);
+
+  User save(User user);
+
+  boolean existsByUsername(String username);
+
 }

@@ -32,6 +32,27 @@ public class UserController {
     return "users";
   }
 
+  @PostMapping("/ehz/admin/users")
+  @Transactional
+  public String userCreate(
+      @RequestParam("username") String username,
+      @RequestParam("password") String password,
+      @RequestParam("realName") String realName,
+      @RequestParam("role") String role) {
+
+    userService.createUser(username, password, realName, role, true);
+
+
+    return "redirect:/ehz/admin/users";
+  }
+
+  @PostMapping("/ehz/admin/username-check")
+  @ResponseBody
+  public boolean usernameCheck(@RequestParam("username") String username) {
+    String userTrimmed = username.trim();
+    return userService.existsByUsername(userTrimmed);
+  }
+
   @Transactional
   @PostMapping("/ehz/admin/users/{userId}/password")
   @ResponseBody
@@ -48,7 +69,7 @@ public class UserController {
   @Transactional
   @GetMapping("/ehz/admin/users/{userId}/delete")
   @ResponseBody
-  public boolean fileDelete(@PathVariable String userId, RedirectAttributes redirectAttributes) {
+  public boolean userDelete(@PathVariable String userId, RedirectAttributes redirectAttributes) {
 
     User user = userService.findById(Long.valueOf(userId));
     // Delete all userFileMapping
@@ -61,7 +82,7 @@ public class UserController {
   @Transactional
   @GetMapping("/ehz/admin/users/{userId}/enable")
   @ResponseBody
-  public boolean fileEnabled(@PathVariable String userId, RedirectAttributes redirectAttributes) {
+  public boolean userEnabled(@PathVariable String userId, RedirectAttributes redirectAttributes) {
 
     User user = userService.findById(Long.valueOf(userId));
     user.setEnabled(true);
@@ -71,7 +92,7 @@ public class UserController {
   @Transactional
   @GetMapping("/ehz/admin/users/{userId}/disable")
   @ResponseBody
-  public boolean fileDisabled(@PathVariable String userId, RedirectAttributes redirectAttributes) {
+  public boolean userDisabled(@PathVariable String userId, RedirectAttributes redirectAttributes) {
 
     User user = userService.findById(Long.valueOf(userId));
     user.setEnabled(false);

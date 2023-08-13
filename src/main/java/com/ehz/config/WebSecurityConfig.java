@@ -20,6 +20,7 @@ public class WebSecurityConfig {
         .authorizeHttpRequests(
             (requests) ->
                 requests
+                    .requestMatchers("/login.css").permitAll()
                     .requestMatchers("/ehz/admin", "/ehz/admin/**")
                     .hasAuthority("ADMIN")
                     .anyRequest()

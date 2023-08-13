@@ -35,26 +35,26 @@ async function updatePermissionButtons(userId) {
   }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const rows = document.querySelectorAll(
     "#permission-user-table .table-content tr",
   );
 
   rows.forEach((row) => {
-    row.addEventListener("click", function () {
+    row.addEventListener("click", async function () {
       rows.forEach((r) => r.classList.remove("focus"));
       this.classList.add("focus");
 
       const userId = this.getAttribute("value");
 
       // Update the permission buttons when click on a user
-      updatePermissionButtons(userId);
+      await updatePermissionButtons(userId);
     });
   });
 });
 
 // Execute the function when the DOM is loaded
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   // Get the first row of the table's tbody
   const table = document.getElementById("permission-user-table");
   const firstUserRow = table.querySelector("tbody tr:first-child");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Add focus to the User row
   firstUserRow.classList.add("focus");
-  updatePermissionButtons(firstUserId);
+  await updatePermissionButtons(firstUserId);
 });
 
 function sortTable(n) {
@@ -80,22 +80,22 @@ function sortTable(n) {
   //Set the sorting direction to ascending:
   dir = "asc";
   /*Make a loop that will continue until
-                              no switching has been done:*/
+                                  no switching has been done:*/
   while (switching) {
     //start by saying: no switching is done:
     switching = false;
     rows = table.rows;
     /*Loop through all table rows (except the
-                                                            first, which contains table headers):*/
+                                                                    first, which contains table headers):*/
     for (i = 1; i < rows.length - 1; i++) {
       //start by saying there should be no switching:
       shouldSwitch = false;
       /*Get the two elements you want to compare,
-                                                                                          one from current row and one from the next:*/
+                                                                                                      one from current row and one from the next:*/
       x = rows[i].getElementsByTagName("TD")[n];
       y = rows[i + 1].getElementsByTagName("TD")[n];
       /*check if the two rows should switch place,
-                                                                                          based on the direction, asc or desc:*/
+                                                                                                      based on the direction, asc or desc:*/
       if (dir === "asc") {
         if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
           //if so, mark as a switch and break the loop:
@@ -112,14 +112,14 @@ function sortTable(n) {
     }
     if (shouldSwitch) {
       /*If a switch has been marked, make the switch
-                                                                                          and mark that a switch has been done:*/
+                                                                                                      and mark that a switch has been done:*/
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
       //Each time a switch is done, increase this count by 1:
       switchCount++;
     } else {
       /*If no switching has been done AND the direction is "asc",
-                                                                                          set the direction to "desc" and run the while loop again.*/
+                                                                                                      set the direction to "desc" and run the while loop again.*/
       if (switchCount === 0 && dir === "asc") {
         dir = "desc";
         switching = true;

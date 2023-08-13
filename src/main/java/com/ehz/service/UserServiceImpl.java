@@ -34,13 +34,13 @@ public class UserServiceImpl implements UserService {
       String username, String password, String realName, String roleName, boolean isEnabled) {
     // Retrieve the role from the role repository
 
-    Role role = Role.valueOf(roleName);
+    Role role = Role.valueOf(roleName.trim());
 
     // Create and save the user object
     User user = new User();
-    user.setUsername(username);
-    user.setRealName(realName);
-    user.setPassword(password);
+    user.setUsername(username.trim());
+    user.setRealName(realName.trim());
+    user.setPassword(password.trim());
     user.setRole(role);
     user.setEnabled(isEnabled);
     User savedUser = userRepository.save(user);
@@ -112,5 +112,15 @@ public class UserServiceImpl implements UserService {
     return userRepository
         .findById(userId)
         .orElseThrow(() -> new EntityNotFoundException("User not present"));
+  }
+
+  @Override
+  public User save(User user) {
+    return userRepository.save(user);
+  }
+
+  @Override
+  public boolean existsByUsername(String username) {
+    return userRepository.existsByUsername(username);
   }
 }

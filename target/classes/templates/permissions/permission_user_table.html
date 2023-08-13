@@ -28,7 +28,10 @@
       <tbody class="table-content">
         <!-- Loop through the list of users -->
         <tr th:each="user : ${users}" th:value="${user.userId}">
-          <td th:text="${user.realName + '  <' + user.username + '>'}"></td>
+          <td
+            style="white-space: pre-wrap"
+            th:text="${user.realName + '  <' + user.username + '>'}"
+          ></td>
         </tr>
       </tbody>
     </table>

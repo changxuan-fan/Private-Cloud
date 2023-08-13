@@ -7,9 +7,10 @@ import lombok.*;
 
 @Entity
 @Table
-@Data
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SubFile implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)

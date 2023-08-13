@@ -46,7 +46,7 @@ function handleCreateSubmit(event) {
   // Modify the regex based on your target environment's restrictions.
   const illegalCharactersRegex = /[\\/:"*?<>|]/;
 
-  if (illegalCharactersRegex.test(filename)) {
+  if (illegalCharactersRegex.test(filename) || filename.length === 0) {
     document.getElementById("label-create-hidden").style.visibility = "visible";
   } else {
     // Perform AJAX request to the server to check for name duplicates

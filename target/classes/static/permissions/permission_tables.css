@@ -6,7 +6,7 @@ Table Styles
   font-size: 18px;
   border-collapse: collapse;
   table-layout: fixed;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
   margin: 10px;
   display: block;
 }
@@ -69,7 +69,7 @@ Permission Button Style
 }
 
 .permission-button {
-  padding: 10px 20px;
+  padding: 10px;
   background-color: #ccc; /* Default grey color */
   color: #333; /* Dark text color */
   border: none;

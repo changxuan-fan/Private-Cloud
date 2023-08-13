@@ -1,6 +1,9 @@
 <!doctype html>
 
-<html xmlns:th="http://www.thymeleaf.org">
+<html
+  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+  xmlns:th="http://www.thymeleaf.org"
+>
   <head>
     <title></title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
@@ -8,7 +11,17 @@
   </head>
 
   <body>
-    <div class="main">
+    <div class="main" sec:authorize="hasAuthority('ADMIN')">
+      <div th:replace="~{files/file_upload_create}"></div>
+      <div th:replace="~{files/file_paths}"></div>
+      <div th:replace="~{files/file_table}"></div>
+    </div>
+
+    <div
+      class="main"
+      sec:authorize="hasAuthority('USER')"
+      style="padding-left: 20px"
+    >
       <div th:replace="~{files/file_upload_create}"></div>
       <div th:replace="~{files/file_paths}"></div>
       <div th:replace="~{files/file_table}"></div>

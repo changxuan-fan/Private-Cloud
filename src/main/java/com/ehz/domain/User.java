@@ -7,9 +7,11 @@ import lombok.*;
 
 @Entity
 @Table
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@ToString
 public class User implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

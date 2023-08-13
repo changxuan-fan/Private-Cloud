@@ -6,7 +6,7 @@ Table Styles
   border-collapse: collapse;
   width: 100%;
   table-layout: fixed;
-  overflow-wrap: break-word;
+  overflow-wrap: anywhere;
 }
 
 /* Table cells and headers */
@@ -60,6 +60,10 @@ Table Body Styles
 */
 
 /* Add a custom class to rows that will be focused */
+.table-content {
+  white-space: pre-wrap;
+}
+
 .table-content tr.focus {
   background-color: #c2e7ff;
 }

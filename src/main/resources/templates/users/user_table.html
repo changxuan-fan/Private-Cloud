@@ -1,9 +1,6 @@
 <!doctype html>
 
-<html
-  xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
-  xmlns:th="http://www.thymeleaf.org"
->
+<html xmlns:th="http://www.thymeleaf.org">
   <head>
     <title></title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
@@ -27,7 +24,10 @@
               <button id="username" onclick="sortTable(1)">Username</button>
             </th>
             <th>
-              <button id="isEnabled">isEnabled</button>
+              <button id="role" onclick="sortTable(2)">Role</button>
+            </th>
+            <th>
+              <button id="isEnabled" onclick="sortTable(3)">isEnabled</button>
             </th>
             <th>
               <button id="options">Options</button>
@@ -40,6 +40,7 @@
           <tr th:each="user : ${users}">
             <td th:text="${user.realName}"></td>
             <td th:text="${user.username}"></td>
+            <td th:text="${user.role}"></td>
             <td
               th:style="${'color:' + (user.isEnabled ? 'black' : 'red')}"
               th:text="${user.isEnabled} ? '&#10004;' : '&#10006;'"

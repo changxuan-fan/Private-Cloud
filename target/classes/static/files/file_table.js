@@ -18,6 +18,8 @@ const createRow = (obj) => {
     uuid,
     description,
     permission,
+    uploadDate,
+    fileSize,
     author,
   } = obj;
 
@@ -59,11 +61,11 @@ const createRow = (obj) => {
   row.appendChild(cellFilename);
 
   // Create Other Properties' Cell
-  const properties = ["description", "uploadDate", "author", "fileSize"];
+  const properties = [description, uploadDate, author, fileSize];
 
   for (const prop of properties) {
     const cell = document.createElement("td");
-    cell.textContent = obj[prop];
+    cell.textContent = prop;
     row.appendChild(cell);
   }
 

@@ -28,7 +28,10 @@
 
       <tbody class="table-content" th:each="file : ${fileTree}">
         <tr>
-          <td th:text="${'&#9660; ' + file.filename}"></td>
+          <td
+            style="white-space: pre-wrap"
+            th:text="${'&#9660;  ' + file.filename}"
+          ></td>
           <td>
             <div class="permission-button-container" th:value="${file.fileId}">
               <button class="permission-button">NONE</button>
@@ -38,7 +41,10 @@
         </tr>
 
         <tr th:each="child : ${file.children}">
-          <td style="padding-left: 70px" th:text="${child.filename}"></td>
+          <td
+            style="padding-left: 70px; white-space: pre-wrap"
+            th:text="${child.filename}"
+          ></td>
           <td>
             <div class="permission-button-container" th:value="${child.fileId}">
               <button class="permission-button">NONE</button>
