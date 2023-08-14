@@ -1,13 +1,10 @@
 function displayPassword() {
-  const passwordValue = this.dataset.password;
-  const passwordUrl = this.dataset.passwordUrl;
+  const passwordUrl = this.value;
 
   const formElement = document.querySelector(".form-password");
-  const inputElement = document.querySelector(".input-password");
 
   // Set attributes for form and input elements
   formElement.setAttribute("action", passwordUrl);
-  inputElement.value = passwordValue;
 
   const divPassword = document.getElementById("div-password");
   if (divPassword) {

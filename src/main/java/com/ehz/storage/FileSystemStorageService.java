@@ -2,6 +2,8 @@ package com.ehz.storage;
 
 import java.io.*;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Stream;
@@ -167,10 +169,13 @@ public class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public boolean hasDuplicateConflict(String[] fileList, Path directoryPath) {
+  public boolean hasDuplicateConflict(String[] fileList, Path directoryPath)
+      throws UnsupportedEncodingException {
     // Collect all the file names to check for conflicts
-    for (String filename : fileList) {
-      Path filePathInDirectory = directoryPath.resolve(filename);
+    for (String encodedFileName : fileList) {
+      String decodedFileName = URLDecoder.decode(encodedFileName, StandardCharsets.UTF_8);
+
+      Path filePathInDirectory = directoryPath.resolve(decodedFileName);
 
       if (Files.exists(filePathInDirectory)) {
         return true;

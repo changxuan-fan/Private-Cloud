@@ -2,6 +2,7 @@ package com.ehz.storage;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.FileSystemException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -15,7 +16,8 @@ public interface StorageService {
 
   void store(MultipartFile[] file, String filePath);
 
-  boolean hasDuplicateConflict(String[] fileList, Path directoryPath);
+  boolean hasDuplicateConflict(String[] fileList, Path directoryPath)
+      throws UnsupportedEncodingException;
 
   Stream<Path> loadAll(String filePath);
 

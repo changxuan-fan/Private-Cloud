@@ -28,7 +28,7 @@
   color: #333;
   width: 400px;
   max-width: 400px;
-  margin-left: 43px;
+  margin-left: 63px;
   position: relative;
 }
 
@@ -63,4 +63,12 @@
 .username {
   padding-right: 50px;
   min-width: 220px;
+}
+
+#message {
+  width: 300px;
+  display: block;
+  position: absolute;
+  left: 40vw;
+  z-index: 1;
 }

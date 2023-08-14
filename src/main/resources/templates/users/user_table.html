@@ -50,8 +50,7 @@
               <div style="display: flex">
                 <button
                   class="button-options password"
-                  th:data-password="${user.password}"
-                  th:data-password-url="${'/ehz/admin/users/' + user.userId + '/password'}"
+                  th:value="${'/ehz/admin/users/' + user.userId + '/password'}"
                 >
                   <img alt="Password" class="svg-options" src="/password.svg" />
                 </button>

@@ -10,7 +10,10 @@
       <user-name>root</user-name>
       <schema-mapping>
         <introspection-scope>
-          <node kind="schema" qname="security" />
+          <node kind="schema">
+            <name qname="ehz_file_system" />
+            <name qname="@" />
+          </node>
         </introspection-scope>
       </schema-mapping>
     </data-source>

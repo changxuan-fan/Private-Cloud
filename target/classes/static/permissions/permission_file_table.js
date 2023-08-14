@@ -15,7 +15,7 @@ function updatePermission(button) {
   const userId = userRow.getAttribute("value");
 
   const fileId = button.parentNode.getAttribute("value");
-  const permission = button.textContent;
+  const permission = button.value;
 
   const formData = new FormData();
   formData.append("userId", userId);

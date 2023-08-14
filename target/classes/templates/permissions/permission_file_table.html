@@ -16,7 +16,7 @@
     <table class="permission-tables" id="permission-file-table">
       <colgroup>
         <col style="min-width: 250px; width: 350px" />
-        <col style="width: 300px" />
+        <col style="min-width: 450px" />
       </colgroup>
       <thead>
         <tr>
@@ -34,8 +34,8 @@
           ></td>
           <td>
             <div class="permission-button-container" th:value="${file.fileId}">
-              <button class="permission-button">NONE</button>
-              <button class="permission-button">DISPLAY</button>
+              <button class="permission-button" value="NONE">NONE</button>
+              <button class="permission-button" value="DISPLAY">DISPLAY</button>
             </div>
           </td>
         </tr>
@@ -47,10 +47,12 @@
           ></td>
           <td>
             <div class="permission-button-container" th:value="${child.fileId}">
-              <button class="permission-button">NONE</button>
-              <button class="permission-button">DISPLAY</button>
-              <button class="permission-button">DOWNLOAD</button>
-              <button class="permission-button">MODIFY</button>
+              <button class="permission-button" value="NONE">NONE</button>
+              <button class="permission-button" value="DISPLAY">DISPLAY</button>
+              <button class="permission-button" value="DOWNLOAD">
+                DOWNLOAD
+              </button>
+              <button class="permission-button" value="MODIFY">MODIFY</button>
             </div>
           </td>
         </tr>

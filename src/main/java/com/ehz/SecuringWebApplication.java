@@ -22,15 +22,13 @@ public class SecuringWebApplication {
   CommandLineRunner init(
       StorageService storageService, FileService fileService, UserService userService) {
     return (args) -> {
-//                        storageService.init();
-//                        fileService.createRoot();
-//                        userService.createUser("kevin", "{noop}140", "Kevin", "ADMIN", true);
-//
-//                        userService.createUser("jack", "{noop}140", "Jack", "USER", true);
-//                        userService.createUser("mack", "{noop}140", "Jack", "USER", true);
-//                        userService.createUser("tom", "{noop}140", "Jack", "USER", true);
-//                        userService.createUser("tim", "{noop}140", "Jack", "USER", true);
-//                        userService.createUser("lucy", "{noop}140", "Jack", "USER", true);
+      storageService.init();
+      fileService.createRoot();
+      userService.createUser("kevin", "1401", "Kevin", "ADMIN", true);
+
+      userService.createUser("jack", "1401", "Jack", "USER", true);
+      userService.createUser("mack", "1401", "Mack", "USER", true);
+      userService.createUser("tom", "1401", "Tom", "USER", true);
     };
   }
 }

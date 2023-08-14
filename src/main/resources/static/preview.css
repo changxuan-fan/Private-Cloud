@@ -9,25 +9,35 @@
   padding: 1rem;
 }
 
+/* Button styling */
 .btn {
-  background: coral;
+  background-color: coral;
   color: #fff;
   border: none;
-  outline: none;
   cursor: pointer;
-  padding: 0.7rem 2rem;
+  padding: 10px 20px;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 0.3rem;
+  font-size: 20px;
+  margin: 0 10px;
 }
 
 .btn:hover {
   opacity: 0.9;
 }
 
+/* Page info styling */
 .page-info {
   margin-left: 1rem;
+  font-style: italic;
+  color: white;
 }
 
+/* Error message styling */
 .error {
-  background: orangered;
+  background-color: orangered;
   color: #fff;
   padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

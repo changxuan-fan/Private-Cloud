@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>ehz_3</artifactId>
+    <artifactId>EHZ_FINAL</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>securing-web-complete</name>
     <description>EHZ File Management System</description>

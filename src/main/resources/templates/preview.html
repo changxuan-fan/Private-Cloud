@@ -3,32 +3,21 @@
     <meta charset="UTF-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta content="ie=edge" http-equiv="X-UA-Compatible" />
-    <link
-      crossorigin="anonymous"
-      href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-      integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" th:href="@{preview.css}" />
+    <link href="/preview.css" rel="stylesheet" />
     <title>PDF Viewer</title>
   </head>
   <body>
     <div class="top-bar">
       <button class="btn" id="prev-page">
-        <i class="fas fa-arrow-circle-left"></i> Prev Page
+        <img alt="Left Arrow" src="/arrow-left-circle.svg" /> Prev Page
       </button>
       <button class="btn" id="next-page">
-        Next Page <i class="fas fa-arrow-circle-right"></i>
+        Next Page <img alt="Right Arrow" src="/arrow-right-circle.svg" />
       </button>
       <span class="page-info">
         Page <span id="page-num"></span> of <span id="page-count"></span>
       </span>
     </div>
-
-    <!--
-                             Render the model attribute in a hidden input field
-                            <div th:text="${fileArray}">Default value if fileString is null or not present</div>
-                            -->
 
     <canvas id="pdf-render"></canvas>
 
@@ -36,6 +25,6 @@
     <script th:inline="javascript">
       const encodedFile = /*[[${encodedFile}]]*/ "";
     </script>
-    <script th:src="@{/preview.js}"></script>
+    <script src="/preview.js"></script>
   </body>
 </html>

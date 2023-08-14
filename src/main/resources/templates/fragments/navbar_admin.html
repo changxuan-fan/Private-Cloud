@@ -23,6 +23,14 @@
 
       <div style="width: 1450px"></div>
 
+      <!--      Alert-->
+      <div
+        class="alert success"
+        id="message"
+        style="display: none"
+        th:text="${message}"
+      ></div>
+
       <!--Sign Out-->
       <div class="logout">
         <form method="post" th:action="@{/logout}">
@@ -37,5 +45,7 @@
         </h1>
       </div>
     </nav>
+
+    <script src="/fragments/navbar.js"></script>
   </body>
 </html>

@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,17 +17,20 @@ public class UserServiceImpl implements UserService {
   private final UserFileMappingRepository userFileMappingRepository;
   private final FileRepository fileRepository;
   private final String rootLocation;
+  private final PasswordEncoder passwordEncoder;
 
   @Autowired
   public UserServiceImpl(
       UserRepository userRepository,
       UserFileMappingRepository userFileMappingRepository,
       FileRepository fileRepository,
-      StorageProperties storageProperties) {
+      StorageProperties storageProperties,
+      PasswordEncoder passwordEncoder) {
     this.userRepository = userRepository;
     this.userFileMappingRepository = userFileMappingRepository;
     this.fileRepository = fileRepository;
     this.rootLocation = storageProperties.getRootLocation();
+    this.passwordEncoder = passwordEncoder;
   }
 
   @Transactional
@@ -40,7 +44,7 @@ public class UserServiceImpl implements UserService {
     User user = new User();
     user.setUsername(username.trim());
     user.setRealName(realName.trim());
-    user.setPassword(password.trim());
+    user.setPassword(passwordEncoder.encode(password.trim()));
     user.setRole(role);
     user.setEnabled(isEnabled);
     User savedUser = userRepository.save(user);

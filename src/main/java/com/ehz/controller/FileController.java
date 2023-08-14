@@ -11,6 +11,7 @@ import com.ehz.storage.StorageService;
 import jakarta.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.AccessDeniedException;
@@ -377,7 +378,7 @@ public class FileController {
   @ResponseBody
   public boolean checkDuplicates(
       @RequestParam("files") String[] fileList, @PathVariable String uuidString)
-      throws AccessDeniedException {
+      throws AccessDeniedException, UnsupportedEncodingException {
     SubFile subFile = subFileService.findById(UUID.fromString(uuidString));
 
     String subFilePath = subFile.getSubFilePath();
@@ -565,6 +566,17 @@ public class FileController {
 
     return "files";
   }
+
+
+  @GetMapping("/getRootSize")
+  @ResponseBody
+  public String getRootSize() {
+    long size = FileUtils.sizeOfDirectory(new java.io.File(rootLocation));
+    String readableSize = FileUtils.byteCountToDisplaySize(size);
+    System.out.println(readableSize);
+    return readableSize;
+  }
+
 
   @ExceptionHandler(StorageFileNotFoundException.class)
   public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {

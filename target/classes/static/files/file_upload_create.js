@@ -9,7 +9,8 @@ function checkDuplicates(event) {
   // Perform AJAX request to the server to check for name duplicates
   const formData = new FormData();
   for (let i = 0; i < files.length; i++) {
-    formData.append("files", files[i].name); // Append files to the key 'file'
+    const encodedFileName = encodeURIComponent(files[i].name);
+    formData.append("files", encodedFileName);
   }
 
   // AJAX fetch: check duplicate file names
@@ -51,7 +52,9 @@ function handleCreateSubmit(event) {
   } else {
     // Perform AJAX request to the server to check for name duplicates
     const formData = new FormData();
-    formData.append("files", filename);
+    const encodedFileName = encodeURIComponent(filename);
+
+    formData.append("files", encodedFileName);
 
     // AJAX fetch: check duplicate file names
     fetch(`/ehz/files/${uuid}/check-duplicates`, {
